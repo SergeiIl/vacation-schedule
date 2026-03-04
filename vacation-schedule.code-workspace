@@ -1,0 +1,65 @@
+{
+  "folders": [
+    {
+      "path": ".",
+      "name": "main",
+    },
+  ],
+  "settings": {
+    // Исключить из поиска
+    "search.exclude": {
+      "**/dist/**": true,
+      "**/pgdata/**": true,
+      "**/.git": true,
+      "**/.DS_Store": true,
+    },
+
+    // Основные настройки
+    "cSpell.language": "en,ru",
+    "svg.preview.background": "editor",
+
+    // Настройки для монорепозитория
+    "eslint.workingDirectories": [
+      { "directory": "apps/*", "changeProcessCWD": true },
+    ],
+
+    // Настройки для работы с npm/yarn workspaces
+    "npm.exclude": "**/node_modules/**",
+    "npm.packageManager": "npm",
+    "npm.fetchOnlinePackageInfo": true,
+
+    // Настройки редактирования
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true,
+    "editor.tabCompletion": "on",
+    "editor.tabSize": 2,
+    "eslint.format.enable": true,
+    "eslint.nodeEnv": ".env",
+    "files.autoSave": "onFocusChange",
+    "prettier.endOfLine": "auto",
+    "prettier.semi": false,
+    "prettier.singleQuote": true,
+    "prettier.jsxSingleQuote": false,
+    "prettier.trailingComma": "all",
+    "prettier.bracketSpacing": true,
+    "prettier.arrowParens": "always",
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "[typescriptreact]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+    },
+    "[json]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+    },
+    "editor.fontFamily": "JetBrains Mono",
+  },
+
+  // Расширения
+  "extensions": {
+    "recommendations": [
+      "esbenp.prettier-vscode",
+      "streetsidesoftware.code-spell-checker",
+      "streetsidesoftware.code-spell-checker-russian",
+      "bradlc.vscode-tailwindcss",
+    ],
+  },
+}
