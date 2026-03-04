@@ -29,6 +29,7 @@ export function buildBarsForEmployee(
       x,
       width: endX - x,
       rowIndex,
+      color: employee.color,
     })
   }
 

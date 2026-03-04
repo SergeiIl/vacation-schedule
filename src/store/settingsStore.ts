@@ -12,57 +12,89 @@ interface SettingsState extends Settings {
   applySettings: (s: Partial<Settings>) => void
 }
 
-const DEFAULT_SETTINGS: Settings = {
+const LS_KEY = 'app-settings'
+
+const FALLBACK: Settings = {
   planningYear: new Date().getFullYear(),
   scale: 'month',
   theme: 'system',
-  rowHeight: 40,
+  rowHeight: 44,
   showWeekends: true,
   showNRD: true,
 }
 
-function persistSettings(state: Settings) {
+const MIN_ROW_HEIGHT = 44
+
+function loadFromLS(): Settings {
+  try {
+    const raw = localStorage.getItem(LS_KEY)
+    if (!raw) return FALLBACK
+    const saved = { ...FALLBACK, ...JSON.parse(raw) }
+    // Migrate: bump rowHeight if saved value is too small for position text
+    if (saved.rowHeight < MIN_ROW_HEIGHT) saved.rowHeight = MIN_ROW_HEIGHT
+    return saved
+  } catch {
+    return FALLBACK
+  }
+}
+
+function saveToLS(state: Settings) {
+  try {
+    localStorage.setItem(LS_KEY, JSON.stringify(state))
+  } catch {
+    // quota exceeded or private mode — ignore
+  }
+}
+
+function persist(state: Settings) {
+  saveToLS(state)
   putSettings(state).catch(console.error)
 }
+
+const DEFAULT_SETTINGS = loadFromLS()
 
 export const useSettingsStore = create<SettingsState>((set, get) => ({
   ...DEFAULT_SETTINGS,
 
   setScale: (scale) => {
     set({ scale })
-    persistSettings({ ...get(), scale })
+    persist({ ...get(), scale })
   },
 
   setYear: (planningYear) => {
     set({ planningYear })
-    persistSettings({ ...get(), planningYear })
+    persist({ ...get(), planningYear })
   },
 
   setTheme: (theme) => {
     set({ theme })
     applyThemeToDOM(theme)
-    persistSettings({ ...get(), theme })
+    persist({ ...get(), theme })
   },
 
   setRowHeight: (rowHeight) => {
     set({ rowHeight })
-    persistSettings({ ...get(), rowHeight })
+    persist({ ...get(), rowHeight })
   },
 
   toggleShowWeekends: () => {
     const showWeekends = !get().showWeekends
     set({ showWeekends })
-    persistSettings({ ...get(), showWeekends })
+    persist({ ...get(), showWeekends })
   },
 
   toggleShowNRD: () => {
     const showNRD = !get().showNRD
     set({ showNRD })
-    persistSettings({ ...get(), showNRD })
+    persist({ ...get(), showNRD })
   },
 
   applySettings: (s) => {
-    set((prev) => ({ ...prev, ...s }))
+    set((prev) => {
+      const next = { ...prev, ...s }
+      persist(next)
+      return next
+    })
     if (s.theme) applyThemeToDOM(s.theme)
   },
 }))

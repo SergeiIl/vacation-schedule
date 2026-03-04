@@ -15,6 +15,7 @@ interface EmployeeState {
   searchQuery: string
   filterNRD: boolean | null
   filterActiveVacation: boolean
+  filterPosition: string | null
 
   // Undo/Redo
   past: Employee[][]
@@ -30,6 +31,7 @@ interface EmployeeState {
   setSearchQuery: (q: string) => void
   setFilterNRD: (v: boolean | null) => void
   setFilterActiveVacation: (v: boolean) => void
+  setFilterPosition: (v: string | null) => void
   addVacation: (employeeId: string, interval: Omit<VacationInterval, 'id'>) => void
   updateVacation: (employeeId: string, vacationId: string, interval: Partial<VacationInterval>) => void
   removeVacation: (employeeId: string, vacationId: string) => void
@@ -53,6 +55,7 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
   searchQuery: '',
   filterNRD: null,
   filterActiveVacation: false,
+  filterPosition: null,
   past: [],
   future: [],
 
@@ -126,6 +129,7 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
   setSearchQuery: (searchQuery) => set({ searchQuery }),
   setFilterNRD: (filterNRD) => set({ filterNRD }),
   setFilterActiveVacation: (filterActiveVacation) => set({ filterActiveVacation }),
+  setFilterPosition: (filterPosition) => set({ filterPosition }),
 
   addVacation: (employeeId, interval) => {
     const vacation: VacationInterval = { ...interval, id: nanoid() }
@@ -193,7 +197,7 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
   },
 
   filteredEmployees: (_specialDates?: SpecialDate[]) => {
-    const { employees, searchQuery, filterNRD, filterActiveVacation } = get()
+    const { employees, searchQuery, filterNRD, filterActiveVacation, filterPosition } = get()
     let result = employees
 
     if (searchQuery.trim()) {
@@ -207,6 +211,10 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
 
     if (filterActiveVacation) {
       result = result.filter(isCurrentlyOnVacation)
+    }
+
+    if (filterPosition !== null) {
+      result = result.filter((e) => (e.position ?? '') === filterPosition)
     }
 
     return result

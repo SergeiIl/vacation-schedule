@@ -118,8 +118,8 @@ export function SettingsPanel() {
         <Label className="text-sm font-semibold">Высота строки: {rowHeight}px</Label>
         <input
           type="range"
-          min={28}
-          max={72}
+          min={44}
+          max={80}
           step={4}
           value={rowHeight}
           onChange={(e) => setRowHeight(Number(e.target.value))}

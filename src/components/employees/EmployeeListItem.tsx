@@ -32,17 +32,25 @@ export function EmployeeListItem({ employee, onEdit, style }: Props) {
       onClick={() => setSelected(isSelected ? null : employee.id)}
       onDoubleClick={() => onEdit(employee)}
     >
+      {employee.color && (
+        <div
+          className="h-3 w-3 rounded-full flex-shrink-0"
+          style={{ backgroundColor: employee.color }}
+        />
+      )}
       <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-1.5">
-          {hasConflict && <AlertCircle className="h-3.5 w-3.5 text-destructive flex-shrink-0" />}
+        <div className="flex items-center gap-1 leading-tight">
+          {hasConflict && <AlertCircle className="h-3 w-3 text-destructive flex-shrink-0" />}
           <span className="text-sm font-medium truncate">{employee.fullName}</span>
         </div>
-        <div className="flex items-center gap-1 mt-0.5">
-          <span className="text-xs text-muted-foreground">{totalVacDays} дн.</span>
+        <div className="flex items-center gap-1 leading-tight">
+          {employee.position && (
+            <span className="text-[11px] text-muted-foreground truncate">{employee.position}</span>
+          )}
+          {employee.position && <span className="text-[10px] text-muted-foreground/50">·</span>}
+          <span className="text-[11px] text-muted-foreground flex-shrink-0">{totalVacDays} дн.</span>
           {employee.nrd && (
-            <Badge variant="warning" className="text-[10px] px-1 py-0">
-              НРД
-            </Badge>
+            <Badge variant="warning" className="text-[10px] px-1 py-0 flex-shrink-0">НРД</Badge>
           )}
         </div>
       </div>

@@ -7,6 +7,17 @@
     <meta name="description" content="Браузерное приложение для планирования и управления отпусками сотрудников подразделения с диаграммой Ганта, drag-and-drop редактированием и экспортом данных." />
     <meta name="author" content="Vacation Schedule" />
     <title>Планировщик отпусков</title>
+    <script>
+      (function() {
+        try {
+          var s = JSON.parse(localStorage.getItem('app-settings') || '{}');
+          var t = s.theme || 'system';
+          if (t === 'dark' || (t === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+          }
+        } catch(e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

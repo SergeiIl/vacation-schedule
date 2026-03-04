@@ -1,5 +1,5 @@
 import { useRef, useState, useCallback } from 'react'
-import { UserPlus } from 'lucide-react'
+import { UserPlus, Printer } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { EmployeeSearch } from './EmployeeSearch'
 import { EmployeeListItem } from './EmployeeListItem'
@@ -41,15 +41,20 @@ export function EmployeeList() {
   )
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full overflow-hidden">
       <div className="flex items-center justify-between px-2 py-2 border-b border-border">
         <span className="text-sm font-semibold">
           Сотрудники{' '}
           <span className="text-muted-foreground font-normal">({employees.length})</span>
         </span>
-        <Button size="sm" variant="ghost" onClick={() => setShowAddModal(true)} title="Добавить сотрудника">
-          <UserPlus className="h-4 w-4" />
-        </Button>
+        <div className="flex items-center gap-0.5">
+          <Button size="sm" variant="ghost" onClick={() => window.print()} title="Печать (текущий фильтр)">
+            <Printer className="h-4 w-4" />
+          </Button>
+          <Button size="sm" variant="ghost" onClick={() => setShowAddModal(true)} title="Добавить сотрудника">
+            <UserPlus className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
 
       <EmployeeSearch />
@@ -59,7 +64,7 @@ export function EmployeeList() {
           (containerRef as React.MutableRefObject<HTMLDivElement | null>).current = node
           measuredRef(node)
         }}
-        className="flex-1 overflow-y-auto"
+        className="flex-1 min-h-0 overflow-y-auto"
         onScroll={handleScroll}
       >
         {/* Top spacer */}

@@ -17,6 +17,11 @@ import { useSpecialDateStore } from '@/store'
 import type { Employee, VacationInterval, NRD } from '@/types/employee'
 import { validateVacationInterval, validateNoSelfOverlap } from '@/utils/validation'
 
+const PALETTE = [
+  '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6',
+  '#06b6d4', '#f97316', '#84cc16', '#ec4899', '#6366f1',
+]
+
 interface Props {
   employee?: Employee
   onClose: () => void
@@ -32,11 +37,17 @@ interface FormVacation {
 const today = new Date().toISOString().slice(0, 10)
 
 export function AddEmployeeModal({ employee, onClose }: Props) {
-  const { addEmployee, updateEmployee } = useEmployeeStore()
+  const { employees, addEmployee, updateEmployee } = useEmployeeStore()
   const { specialDates } = useSpecialDateStore()
+
+  const existingPositions = [...new Set(employees.map((e) => e.position).filter(Boolean))] as string[]
 
   const [fullName, setFullName] = useState(employee?.fullName ?? '')
   const [nameError, setNameError] = useState('')
+  const [position, setPosition] = useState(employee?.position ?? '')
+  const [color, setColor] = useState(
+    employee?.color ?? PALETTE[employees.length % PALETTE.length],
+  )
   const [vacations, setVacations] = useState<FormVacation[]>(
     employee?.vacations.map((v) => ({ id: v.id, start: v.start, end: v.end })) ?? [],
   )
@@ -130,14 +141,18 @@ export function AddEmployeeModal({ employee, onClose }: Props) {
     if (employee) {
       updateEmployee(employee.id, {
         fullName: fullName.trim(),
+        position: position.trim() || undefined,
         vacations: vacationIntervals,
         nrd: nrdValue,
+        color,
       })
     } else {
       addEmployee({
         fullName: fullName.trim(),
+        position: position.trim() || undefined,
         vacations: vacationIntervals,
         nrd: nrdValue,
+        color,
       })
     }
 
@@ -166,6 +181,53 @@ export function AddEmployeeModal({ employee, onClose }: Props) {
               autoFocus
             />
             {nameError && <p className="text-xs text-destructive">{nameError}</p>}
+          </div>
+
+          {/* Position */}
+          <div className="space-y-1.5">
+            <Label htmlFor="position">Должность</Label>
+            <Input
+              id="position"
+              list="positions-list"
+              value={position}
+              onChange={(e) => setPosition(e.target.value)}
+              placeholder="Инженер, Менеджер..."
+            />
+            {existingPositions.length > 0 && (
+              <datalist id="positions-list">
+                {existingPositions.map((p) => (
+                  <option key={p} value={p} />
+                ))}
+              </datalist>
+            )}
+          </div>
+
+          {/* Bar color */}
+          <div className="space-y-1.5">
+            <Label>Цвет на диаграмме</Label>
+            <div className="flex items-center gap-2 flex-wrap">
+              {PALETTE.map((c) => (
+                <button
+                  key={c}
+                  type="button"
+                  className="h-6 w-6 rounded-full border-2 transition-transform hover:scale-110"
+                  style={{
+                    backgroundColor: c,
+                    borderColor: color === c ? '#000' : 'transparent',
+                    outline: color === c ? `2px solid ${c}` : 'none',
+                    outlineOffset: '2px',
+                  }}
+                  onClick={() => setColor(c)}
+                />
+              ))}
+              <input
+                type="color"
+                value={color}
+                onChange={(e) => setColor(e.target.value)}
+                className="h-6 w-6 rounded cursor-pointer border border-border"
+                title="Свой цвет"
+              />
+            </div>
           </div>
 
           {/* Vacations */}

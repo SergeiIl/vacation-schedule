@@ -16,4 +16,6 @@ export interface Employee {
   nrd: NRD | null
   order: number
   createdAt: string
+  color?: string // hex color for Gantt bars
+  position?: string // job title / department
 }

@@ -1,14 +1,14 @@
 import { useRef, useState, useCallback, useEffect } from 'react'
-import { GanttHeader } from './GanttHeader'
+import { GanttHeader, HEADER_HEIGHT } from './GanttHeader'
 import { GanttGrid } from './GanttGrid'
 import { GanttRow } from './GanttRow'
+import { GanttFooter, FOOTER_HEIGHT } from './GanttFooter'
 import { DnDHandler } from './DnDHandler'
 import { useEmployeeStore, useSpecialDateStore, useSettingsStore } from '@/store'
 import { useVirtualRows } from '@/hooks/useVirtualRows'
 import { chartWidth, dateToPixel, getChartStartDate, PIXELS_PER_DAY } from '@/utils/dateUtils'
 
 const SIDEBAR_WIDTH = 200
-const HEADER_HEIGHT = 32
 
 export function GanttChart() {
   const { filteredEmployees } = useEmployeeStore()
@@ -21,6 +21,7 @@ export function GanttChart() {
 
   const chartScrollRef = useRef<HTMLDivElement>(null)
   const sidebarScrollRef = useRef<HTMLDivElement>(null)
+  const footerScrollRef = useRef<HTMLDivElement>(null)
   const isSyncing = useRef(false)
 
   const [scrollTop, setScrollTop] = useState(0)
@@ -38,12 +39,16 @@ export function GanttChart() {
   }, [planningYear, scale])
 
   const handleChartScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
-    const newScrollTop = e.currentTarget.scrollTop
+    const el = e.currentTarget
+    const newScrollTop = el.scrollTop
     setScrollTop(newScrollTop)
     if (!isSyncing.current) {
       isSyncing.current = true
       if (sidebarScrollRef.current) {
         sidebarScrollRef.current.scrollTop = newScrollTop
+      }
+      if (footerScrollRef.current) {
+        footerScrollRef.current.scrollLeft = el.scrollLeft
       }
       isSyncing.current = false
     }
@@ -82,67 +87,87 @@ export function GanttChart() {
 
   return (
     <DnDHandler>
-      <div ref={measuredRef} className="flex h-full overflow-hidden border border-border rounded-md">
-        {/* Sidebar: employee names */}
-        <div className="flex flex-col flex-shrink-0 border-r border-border" style={{ width: SIDEBAR_WIDTH }}>
-          {/* Header placeholder */}
-          <div
-            className="border-b border-border bg-muted/30 flex items-center px-2 text-xs font-medium text-muted-foreground flex-shrink-0"
-            style={{ height: HEADER_HEIGHT }}
-          >
-            Сотрудник
+      <div className="flex flex-col h-full overflow-hidden border border-border rounded-md">
+        {/* Main scrollable area */}
+        <div ref={measuredRef} className="flex flex-1 overflow-hidden">
+          {/* Sidebar: employee names */}
+          <div className="flex flex-col flex-shrink-0 border-r border-border" style={{ width: SIDEBAR_WIDTH }}>
+            {/* Header placeholder */}
+            <div
+              className="border-b border-border bg-muted/30 flex items-center px-2 text-xs font-medium text-muted-foreground flex-shrink-0"
+              style={{ height: HEADER_HEIGHT }}
+            >
+              Сотрудник
+            </div>
+            {/* Employee name rows */}
+            <div
+              ref={sidebarScrollRef}
+              className="flex-1 overflow-hidden"
+              onScroll={handleSidebarScroll}
+            >
+              <div style={{ height: offsetTop }} />
+              {visibleItems.map((emp) => (
+                <div
+                  key={emp.id}
+                  className="flex items-center gap-2 px-2 border-b border-border/50 text-sm"
+                  style={{ height: rowHeight }}
+                >
+                  {emp.color && (
+                    <div
+                      className="h-2.5 w-2.5 rounded-full flex-shrink-0"
+                      style={{ backgroundColor: emp.color }}
+                    />
+                  )}
+                  <span className="truncate">{emp.fullName}</span>
+                </div>
+              ))}
+              <div style={{ height: offsetBottom }} />
+            </div>
           </div>
-          {/* Employee name rows */}
+
+          {/* Chart area */}
           <div
-            ref={sidebarScrollRef}
-            className="flex-1 overflow-hidden"
-            onScroll={handleSidebarScroll}
+            ref={chartScrollRef}
+            className="flex-1 overflow-auto"
+            onScroll={handleChartScroll}
           >
-            <div style={{ height: offsetTop }} />
-            {visibleItems.map((emp) => (
-              <div
-                key={emp.id}
-                className="flex items-center px-2 border-b border-border/50 text-sm truncate"
-                style={{ height: rowHeight }}
-              >
-                {emp.fullName}
-              </div>
-            ))}
-            <div style={{ height: offsetBottom }} />
+            {/* Header: time axis */}
+            <div className="sticky top-0 z-10">
+              <GanttHeader totalWidth={totalWidth} />
+            </div>
+
+            {/* Rows + grid */}
+            <div
+              className="relative"
+              style={{ width: totalWidth, height: totalHeight }}
+            >
+              <GanttGrid totalWidth={totalWidth} totalHeight={totalHeight} />
+
+              <div style={{ height: offsetTop }} />
+
+              {visibleItems.map((emp, localIdx) => (
+                <GanttRow
+                  key={emp.id}
+                  employee={emp}
+                  rowIndex={startIndex + localIdx}
+                />
+              ))}
+
+              <div style={{ height: offsetBottom }} />
+            </div>
           </div>
         </div>
 
-        {/* Chart area */}
-        <div
-          ref={chartScrollRef}
-          className="flex-1 overflow-auto"
-          onScroll={handleChartScroll}
-        >
-          {/* Header: time axis */}
-          <div className="sticky top-0 z-10">
-            <GanttHeader totalWidth={totalWidth} />
-          </div>
-
-          {/* Rows + grid */}
+        {/* Footer: daily vacation counter */}
+        <div className="flex flex-shrink-0 border-t border-border bg-muted/20" style={{ height: FOOTER_HEIGHT }}>
           <div
-            className="relative"
-            style={{ width: totalWidth, height: totalHeight }}
+            className="flex items-center justify-center px-1 text-[10px] text-muted-foreground bg-muted/30 border-r border-border flex-shrink-0 leading-tight text-center"
+            style={{ width: SIDEBAR_WIDTH }}
           >
-            <GanttGrid totalWidth={totalWidth} totalHeight={totalHeight} />
-
-            {/* Spacer top */}
-            <div style={{ height: offsetTop }} />
-
-            {visibleItems.map((emp, localIdx) => (
-              <GanttRow
-                key={emp.id}
-                employee={emp}
-                rowIndex={startIndex + localIdx}
-              />
-            ))}
-
-            {/* Spacer bottom */}
-            <div style={{ height: offsetBottom }} />
+            В отпуске
+          </div>
+          <div ref={footerScrollRef} className="flex-1 overflow-hidden">
+            <GanttFooter totalWidth={totalWidth} employees={employees} />
           </div>
         </div>
       </div>

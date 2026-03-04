@@ -55,11 +55,10 @@ export function GanttBar({ bar, rowHeight }: Props) {
       <div
         className={cn(
           'gantt-bar',
-          bar.type === 'vacation' && !isDragging && 'gantt-bar-vacation',
+          bar.type === 'vacation' && !isDragging && !bar.color && 'gantt-bar-vacation',
           bar.type === 'nrd' && !isDragging && 'gantt-bar-nrd',
-          isDragging && isValid && 'bg-blue-400 opacity-90 shadow-lg',
+          isDragging && isValid && 'opacity-90 shadow-lg',
           isDragging && !isValid && 'gantt-bar-invalid',
-          bar.type === 'nrd' && isDragging && isValid && 'bg-amber-300',
           'overflow-hidden',
         )}
         style={{
@@ -67,6 +66,13 @@ export function GanttBar({ bar, rowHeight }: Props) {
           width: Math.max(displayWidth, 4),
           height: barHeight,
           zIndex: isDragging ? 10 : 1,
+          // Custom color for vacation bars
+          ...(bar.type === 'vacation' && bar.color && !isDragging
+            ? { backgroundColor: bar.color, color: '#fff' }
+            : {}),
+          ...(isDragging && isValid
+            ? { backgroundColor: bar.type === 'nrd' ? '#fcd34d' : (bar.color ?? '#60a5fa') }
+            : {}),
         }}
         onPointerDown={(e) => {
           if (

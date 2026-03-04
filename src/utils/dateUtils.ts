@@ -103,6 +103,33 @@ export interface HeaderCell {
   width: number
 }
 
+export function buildTopHeaderCells(year: number, scale: Scale): HeaderCell[] {
+  const chartStart = getChartStartDate(year)
+  const chartEnd = getChartEndDate(year)
+  const ppd = PIXELS_PER_DAY[scale]
+
+  if (scale === 'month') {
+    // Top row: quarters
+    return [0, 3, 6, 9].map((startMonth, qi) => {
+      const qStart = new Date(year, startMonth, 1)
+      const qEnd = new Date(year, startMonth + 3, 0)
+      const days = differenceInCalendarDays(qEnd, qStart) + 1
+      return {
+        label: `${['I', 'II', 'III', 'IV'][qi]} кв.`,
+        x: dateToPixel(qStart, chartStart, ppd),
+        width: days * ppd,
+      }
+    })
+  }
+
+  // day and week: top row = months
+  return eachMonthOfInterval({ start: chartStart, end: chartEnd }).map((monthStart) => ({
+    label: format(monthStart, 'LLLL', { locale: ru }),
+    x: dateToPixel(monthStart, chartStart, ppd),
+    width: getDaysInMonth(monthStart) * ppd,
+  }))
+}
+
 export function buildHeaderCells(year: number, scale: Scale): HeaderCell[] {
   const chartStart = getChartStartDate(year)
   const chartEnd = getChartEndDate(year)

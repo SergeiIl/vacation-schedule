@@ -9,6 +9,7 @@ export interface GanttBar {
   x: number
   width: number
   rowIndex: number
+  color?: string // custom hex color (vacation bars only)
 }
 
 export interface DragState {

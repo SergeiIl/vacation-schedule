@@ -109,8 +109,33 @@
     display: none !important;
   }
 
-  #root {
-    height: auto;
-    overflow: visible;
+  body, #root {
+    height: auto !important;
+    overflow: visible !important;
+    background: white !important;
+  }
+
+  /* Gantt container takes full page width */
+  .print-gantt {
+    width: 100% !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    height: auto !important;
+  }
+
+  /* Make Gantt inner elements visible (disable virtual scroll clipping) */
+  .print-gantt * {
+    overflow: visible !important;
+  }
+
+  /* Reset height constraints so all rows render */
+  .print-gantt .flex-1 {
+    height: auto !important;
+    flex: unset !important;
+  }
+
+  @page {
+    size: landscape;
+    margin: 10mm;
   }
 }
