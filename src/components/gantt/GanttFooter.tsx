@@ -34,10 +34,10 @@ export function GanttFooter({ totalWidth, employees }: Props) {
 
     ctx.clearRect(0, 0, totalWidth, FOOTER_HEIGHT)
 
-    // Compute per-day vacation counts
+    // Compute per-day vacation + NRD counts
     const counts = new Array(totalDays).fill(0)
     for (const emp of employees) {
-      for (const v of emp.vacations) {
+      for (const v of [...emp.vacations, ...emp.nrd]) {
         const startDay = Math.max(0, differenceInCalendarDays(parseISO(v.start), chartStart))
         const endDay = Math.min(totalDays - 1, differenceInCalendarDays(parseISO(v.end), chartStart))
         for (let d = startDay; d <= endDay; d++) {

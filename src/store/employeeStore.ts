@@ -36,7 +36,10 @@ interface EmployeeState {
   addVacation: (employeeId: string, interval: Omit<VacationInterval, 'id'>) => void
   updateVacation: (employeeId: string, vacationId: string, interval: Partial<VacationInterval>) => void
   removeVacation: (employeeId: string, vacationId: string) => void
-  setNRD: (employeeId: string, nrd: NRD | null) => void
+  setNRD: (employeeId: string, nrd: NRD[]) => void
+  addNRD: (employeeId: string, interval: Omit<NRD, 'id'>) => void
+  updateNRD: (employeeId: string, nrdId: string, interval: Partial<Omit<NRD, 'id'>>) => void
+  removeNRD: (employeeId: string, nrdId: string) => void
   undo: () => void
   redo: () => void
   filteredEmployees: (specialDates?: SpecialDate[]) => Employee[]
@@ -107,6 +110,7 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
       createdAt: new Date().toISOString(),
       order: employees.length,
       vacations: source.vacations.map((v) => ({ ...v, id: nanoid() })),
+      nrd: source.nrd.map((n) => ({ ...n, id: nanoid() })),
     }
     set((s) => ({
       employees: [...s.employees, newEmp],
@@ -198,6 +202,45 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
     })
   },
 
+  addNRD: (employeeId, interval) => {
+    const nrd: NRD = { ...interval, id: nanoid() }
+    set((s) => {
+      const employees = s.employees.map((e) =>
+        e.id === employeeId ? { ...e, nrd: [...e.nrd, nrd] } : e,
+      )
+      const updated = employees.find((e) => e.id === employeeId)
+      if (updated) putEmployee(updated).catch(console.error)
+      return { employees, past: [...s.past.slice(-MAX_HISTORY), s.employees], future: [] }
+    })
+  },
+
+  updateNRD: (employeeId, nrdId, interval) => {
+    set((s) => {
+      const employees = s.employees.map((e) => {
+        if (e.id !== employeeId) return e
+        return {
+          ...e,
+          nrd: e.nrd.map((n) => (n.id === nrdId ? { ...n, ...interval } : n)),
+        }
+      })
+      const updated = employees.find((e) => e.id === employeeId)
+      if (updated) putEmployee(updated).catch(console.error)
+      return { employees, past: [...s.past.slice(-MAX_HISTORY), s.employees], future: [] }
+    })
+  },
+
+  removeNRD: (employeeId, nrdId) => {
+    set((s) => {
+      const employees = s.employees.map((e) => {
+        if (e.id !== employeeId) return e
+        return { ...e, nrd: e.nrd.filter((n) => n.id !== nrdId) }
+      })
+      const updated = employees.find((e) => e.id === employeeId)
+      if (updated) putEmployee(updated).catch(console.error)
+      return { employees, past: [...s.past.slice(-MAX_HISTORY), s.employees], future: [] }
+    })
+  },
+
   undo: () => {
     const { past, employees, future } = get()
     if (past.length === 0) return
@@ -225,7 +268,7 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
     }
 
     if (filterNRD !== null) {
-      result = result.filter((e) => filterNRD ? e.nrd !== null : e.nrd === null)
+      result = result.filter((e) => filterNRD ? e.nrd.length > 0 : e.nrd.length === 0)
     }
 
     if (filterActiveVacation) {

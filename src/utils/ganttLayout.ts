@@ -33,21 +33,23 @@ export function buildBarsForEmployee(
     })
   }
 
-  if (showNRD && employee.nrd) {
-    const startDate = parseISO(employee.nrd.start)
-    const endDate = parseISO(employee.nrd.end)
-    const x = dateToPixel(startDate, chartStart, ppd)
-    const endX = dateToPixel(endDate, chartStart, ppd) + ppd
-    bars.push({
-      employeeId: employee.id,
-      vacationId: 'nrd',
-      type: 'nrd',
-      startDate,
-      endDate,
-      x,
-      width: endX - x,
-      rowIndex,
-    })
+  if (showNRD) {
+    for (const nrd of employee.nrd) {
+      const startDate = parseISO(nrd.start)
+      const endDate = parseISO(nrd.end)
+      const x = dateToPixel(startDate, chartStart, ppd)
+      const endX = dateToPixel(endDate, chartStart, ppd) + ppd
+      bars.push({
+        employeeId: employee.id,
+        vacationId: nrd.id,
+        type: 'nrd',
+        startDate,
+        endDate,
+        x,
+        width: endX - x,
+        rowIndex,
+      })
+    }
   }
 
   return bars

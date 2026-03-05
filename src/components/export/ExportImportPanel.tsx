@@ -107,13 +107,13 @@ export function ExportImportPanel() {
         )
         if (existing) {
           existing.vacations = match.vacations.map((v) => ({ ...v, id: nanoid() }))
-          if (match.nrd) existing.nrd = match.nrd
+          existing.nrd = match.nrd.map((n) => ({ ...n, id: nanoid() }))
         } else {
           updatedEmployees.push({
             id: nanoid(),
             fullName: match.fullName,
             vacations: match.vacations.map((v) => ({ ...v, id: nanoid() })),
-            nrd: match.nrd,
+            nrd: match.nrd.map((n) => ({ ...n, id: nanoid() })),
             order: updatedEmployees.length,
             createdAt: new Date().toISOString(),
           })

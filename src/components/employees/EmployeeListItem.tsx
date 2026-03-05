@@ -49,7 +49,7 @@ export function EmployeeListItem({ employee, onEdit, style }: Props) {
           )}
           {employee.position && <span className="text-[10px] text-muted-foreground/50">·</span>}
           <span className="text-[11px] text-muted-foreground flex-shrink-0">{totalVacDays} дн.</span>
-          {employee.nrd && (
+          {employee.nrd.length > 0 && (
             <Badge variant="warning" className="text-[10px] px-1 py-0 flex-shrink-0">НРД</Badge>
           )}
         </div>

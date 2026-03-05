@@ -15,6 +15,7 @@ export interface GanttBar {
 export interface DragState {
   active: boolean
   barId: string // `${employeeId}:${vacationId}`
+  barType: 'vacation' | 'nrd'
   mode: DragMode
   originX: number
   originStartDate: Date

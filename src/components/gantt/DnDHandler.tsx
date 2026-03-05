@@ -29,7 +29,7 @@ export function DnDHandler({ children }: Props) {
   const dragStateRef = useRef<DragState | null>(null)
   dragStateRef.current = dragState
 
-  const { updateVacation } = useEmployeeStore()
+  const { updateVacation, updateNRD } = useEmployeeStore()
   const { specialDates } = useSpecialDateStore()
   const { scale, planningYear } = useSettingsStore()
 
@@ -43,6 +43,7 @@ export function DnDHandler({ children }: Props) {
       const state: DragState = {
         active: true,
         barId: `${bar.employeeId}:${bar.vacationId}`,
+        barType: bar.type,
         mode,
         originX: e.clientX,
         originStartDate: bar.startDate,
@@ -91,7 +92,7 @@ export function DnDHandler({ children }: Props) {
       const employee = employees.find((e) => e.id === empId)
       const employeeVacations = employee?.vacations ?? []
 
-      const valid = vacId === 'nrd'
+      const valid = ds.barType === 'nrd'
         ? newStart <= newEnd
         : isIntervalValid(newStart, newEnd, employeeVacations, vacId, specialDates)
 
@@ -107,8 +108,8 @@ export function DnDHandler({ children }: Props) {
         const startStr = format(ds.currentStartDate, 'yyyy-MM-dd')
         const endStr = format(ds.currentEndDate, 'yyyy-MM-dd')
 
-        if (vacId === 'nrd') {
-          useEmployeeStore.getState().setNRD(empId, { start: startStr, end: endStr })
+        if (ds.barType === 'nrd') {
+          updateNRD(empId, vacId, { start: startStr, end: endStr })
         } else {
           updateVacation(empId, vacId, { start: startStr, end: endStr })
         }
@@ -123,7 +124,7 @@ export function DnDHandler({ children }: Props) {
       window.removeEventListener('pointermove', onPointerMove)
       window.removeEventListener('pointerup', onPointerUp)
     }
-  }, [dragState?.active, pixelsPerDay, specialDates, planningYear, updateVacation])
+  }, [dragState?.active, pixelsPerDay, specialDates, planningYear, updateVacation, updateNRD])
 
   return (
     <DragContext.Provider value={{ dragState, startDrag }}>

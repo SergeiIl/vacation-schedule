@@ -1,7 +1,25 @@
 import { useEffect } from 'react'
+import { nanoid } from 'nanoid'
 import { AppShell } from '@/components/layout/AppShell'
 import { useEmployeeStore, useSpecialDateStore, useSettingsStore, applyThemeToDOM } from '@/store'
 import { getAllEmployees, getAllSpecialDates, getSettings } from '@/db/indexedDB'
+import type { Employee } from '@/types/employee'
+
+function migrateEmployee(raw: unknown): Employee {
+  const e = raw as Record<string, unknown>
+  let nrd = e.nrd
+  if (nrd === null || nrd === undefined) {
+    nrd = []
+  } else if (!Array.isArray(nrd)) {
+    const old = nrd as { start: string; end: string }
+    nrd = [{ id: nanoid(), start: old.start, end: old.end }]
+  } else {
+    nrd = (nrd as Record<string, unknown>[]).map((n) =>
+      n.id ? n : { ...n, id: nanoid() },
+    )
+  }
+  return { ...e, nrd } as Employee
+}
 
 export default function App() {
   const { setEmployees } = useEmployeeStore()
@@ -16,7 +34,7 @@ export default function App() {
           getAllSpecialDates(),
           getSettings(),
         ])
-        setEmployees(employees)
+        setEmployees(employees.map(migrateEmployee))
         setSpecialDates(specialDates)
         if (settings) {
           applySettings(settings)

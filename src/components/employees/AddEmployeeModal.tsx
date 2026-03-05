@@ -11,15 +11,25 @@ import {
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Label } from '@/components/ui/Label'
-import { Switch } from '@/components/ui/Switch'
 import { useEmployeeStore } from '@/store'
 import { useSpecialDateStore } from '@/store'
 import type { Employee, VacationInterval, NRD } from '@/types/employee'
-import { validateVacationInterval, validateNoSelfOverlap } from '@/utils/validation'
+import {
+  validateVacationInterval,
+  validateNoSelfOverlap,
+} from '@/utils/validation'
 
 const PALETTE = [
-  '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6',
-  '#06b6d4', '#f97316', '#84cc16', '#ec4899', '#6366f1',
+  '#3b82f6',
+  '#10b981',
+  '#f59e0b',
+  '#ef4444',
+  '#8b5cf6',
+  '#06b6d4',
+  '#f97316',
+  '#84cc16',
+  '#ec4899',
+  '#6366f1',
 ]
 
 interface Props {
@@ -40,7 +50,9 @@ export function AddEmployeeModal({ employee, onClose }: Props) {
   const { employees, addEmployee, updateEmployee } = useEmployeeStore()
   const { specialDates } = useSpecialDateStore()
 
-  const existingPositions = [...new Set(employees.map((e) => e.position).filter(Boolean))] as string[]
+  const existingPositions = [
+    ...new Set(employees.map((e) => e.position).filter(Boolean)),
+  ] as string[]
 
   const [fullName, setFullName] = useState(employee?.fullName ?? '')
   const [nameError, setNameError] = useState('')
@@ -49,23 +61,47 @@ export function AddEmployeeModal({ employee, onClose }: Props) {
     employee?.color ?? PALETTE[employees.length % PALETTE.length],
   )
   const [vacations, setVacations] = useState<FormVacation[]>(
-    employee?.vacations.map((v) => ({ id: v.id, start: v.start, end: v.end })) ?? [],
+    employee?.vacations.map((v) => ({
+      id: v.id,
+      start: v.start,
+      end: v.end,
+    })) ?? [],
   )
-  const [hasNRD, setHasNRD] = useState(employee?.nrd != null)
-  const [nrd, setNRD] = useState<{ start: string; end: string }>(
-    employee?.nrd ?? { start: today, end: today },
+  const [nrds, setNRDs] = useState<FormVacation[]>(
+    employee?.nrd.map((n) => ({ id: n.id, start: n.start, end: n.end })) ?? [],
   )
   const [globalError, setGlobalError] = useState('')
 
+  const addNrd = () => {
+    setNRDs((prev) => [...prev, { id: nanoid(), start: today, end: today }])
+  }
+
+  const removeNrd = (id: string) => {
+    setNRDs((prev) => prev.filter((n) => n.id !== id))
+  }
+
+  const updateNrdField = (id: string, field: 'start' | 'end', value: string) => {
+    setNRDs((prev) =>
+      prev.map((n) => (n.id !== id ? n : { ...n, [field]: value })),
+    )
+  }
+
   const addVacation = () => {
-    setVacations((prev) => [...prev, { id: nanoid(), start: today, end: today }])
+    setVacations((prev) => [
+      ...prev,
+      { id: nanoid(), start: today, end: today },
+    ])
   }
 
   const removeVacation = (id: string) => {
     setVacations((prev) => prev.filter((v) => v.id !== id))
   }
 
-  const updateVacation = (id: string, field: 'start' | 'end', value: string) => {
+  const updateVacation = (
+    id: string,
+    field: 'start' | 'end',
+    value: string,
+  ) => {
     setVacations((prev) =>
       prev.map((v) => {
         if (v.id !== id) return v
@@ -81,7 +117,10 @@ export function AddEmployeeModal({ employee, onClose }: Props) {
           allVacations,
           specialDates,
         )
-        return { ...updated, error: result.valid ? undefined : result.errors[0] }
+        return {
+          ...updated,
+          error: result.valid ? undefined : result.errors[0],
+        }
       }),
     )
   }
@@ -118,7 +157,9 @@ export function AddEmployeeModal({ employee, onClose }: Props) {
       )
       if (!result.valid) {
         setVacations((prev) =>
-          prev.map((vv) => (vv.id === v.id ? { ...vv, error: result.errors[0] } : vv)),
+          prev.map((vv) =>
+            vv.id === v.id ? { ...vv, error: result.errors[0] } : vv,
+          ),
         )
         valid = false
       }
@@ -136,14 +177,18 @@ export function AddEmployeeModal({ employee, onClose }: Props) {
       end: v.end,
     }))
 
-    const nrdValue: NRD | null = hasNRD ? { start: nrd.start, end: nrd.end } : null
+    const nrdIntervals: NRD[] = nrds.map((n) => ({
+      id: n.id,
+      start: n.start,
+      end: n.end,
+    }))
 
     if (employee) {
       updateEmployee(employee.id, {
         fullName: fullName.trim(),
         position: position.trim() || undefined,
         vacations: vacationIntervals,
-        nrd: nrdValue,
+        nrd: nrdIntervals,
         color,
       })
     } else {
@@ -151,7 +196,7 @@ export function AddEmployeeModal({ employee, onClose }: Props) {
         fullName: fullName.trim(),
         position: position.trim() || undefined,
         vacations: vacationIntervals,
-        nrd: nrdValue,
+        nrd: nrdIntervals,
         color,
       })
     }
@@ -163,7 +208,9 @@ export function AddEmployeeModal({ employee, onClose }: Props) {
     <Dialog open onOpenChange={onClose}>
       <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{employee ? 'Редактировать сотрудника' : 'Добавить сотрудника'}</DialogTitle>
+          <DialogTitle>
+            {employee ? 'Редактировать сотрудника' : 'Добавить сотрудника'}
+          </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-5">
@@ -180,7 +227,9 @@ export function AddEmployeeModal({ employee, onClose }: Props) {
               placeholder="Иванов Иван Иванович"
               autoFocus
             />
-            {nameError && <p className="text-xs text-destructive">{nameError}</p>}
+            {nameError && (
+              <p className="text-xs text-destructive">{nameError}</p>
+            )}
           </div>
 
           {/* Position */}
@@ -241,18 +290,24 @@ export function AddEmployeeModal({ employee, onClose }: Props) {
             </div>
 
             {vacations.length === 0 && (
-              <p className="text-sm text-muted-foreground">Нет отпусков. Нажмите «Добавить».</p>
+              <p className="text-sm text-muted-foreground">
+                Нет отпусков. Нажмите «Добавить».
+              </p>
             )}
 
             {vacations.map((v, i) => (
               <div key={v.id} className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-muted-foreground w-4">{i + 1}.</span>
+                  <span className="text-xs text-muted-foreground w-4">
+                    {i + 1}.
+                  </span>
                   <div className="flex-1 flex items-center gap-2">
                     <Input
                       type="date"
                       value={v.start}
-                      onChange={(e) => updateVacation(v.id, 'start', e.target.value)}
+                      onChange={(e) =>
+                        updateVacation(v.id, 'start', e.target.value)
+                      }
                       className="flex-1"
                     />
                     <span className="text-muted-foreground text-sm">–</span>
@@ -260,7 +315,9 @@ export function AddEmployeeModal({ employee, onClose }: Props) {
                       type="date"
                       value={v.end}
                       min={v.start}
-                      onChange={(e) => updateVacation(v.id, 'end', e.target.value)}
+                      onChange={(e) =>
+                        updateVacation(v.id, 'end', e.target.value)
+                      }
                       className="flex-1"
                     />
                     <Button
@@ -273,43 +330,64 @@ export function AddEmployeeModal({ employee, onClose }: Props) {
                     </Button>
                   </div>
                 </div>
-                {v.error && <p className="text-xs text-destructive ml-6">{v.error}</p>}
+                {v.error && (
+                  <p className="text-xs text-destructive ml-6">{v.error}</p>
+                )}
               </div>
             ))}
           </div>
 
           {/* NRD */}
           <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <Switch
-                id="hasNRD"
-                checked={hasNRD}
-                onCheckedChange={setHasNRD}
-              />
-              <Label htmlFor="hasNRD">Нерабочие дни (НРД)</Label>
+            <div className="flex items-center justify-between">
+              <Label>НРД</Label>
+              <Button variant="outline" size="sm" onClick={addNrd}>
+                <Plus className="h-3.5 w-3.5 mr-1" />
+                Добавить
+              </Button>
             </div>
-            {hasNRD && (
-              <div className="flex items-center gap-2 ml-8">
-                <Input
-                  type="date"
-                  value={nrd.start}
-                  onChange={(e) => setNRD((n) => ({ ...n, start: e.target.value }))}
-                  className="flex-1"
-                />
-                <span className="text-muted-foreground text-sm">–</span>
-                <Input
-                  type="date"
-                  value={nrd.end}
-                  min={nrd.start}
-                  onChange={(e) => setNRD((n) => ({ ...n, end: e.target.value }))}
-                  className="flex-1"
-                />
-              </div>
+
+            {nrds.length === 0 && (
+              <p className="text-sm text-muted-foreground">
+                Нет периодов НРД. Нажмите «Добавить».
+              </p>
             )}
+
+            {nrds.map((n, i) => (
+              <div key={n.id} className="flex items-center gap-2">
+                <span className="text-xs text-muted-foreground w-4">{i + 1}.</span>
+                <div className="flex-1 flex items-center gap-2">
+                  <Input
+                    type="date"
+                    value={n.start}
+                    onChange={(e) => updateNrdField(n.id, 'start', e.target.value)}
+                    className="flex-1"
+                  />
+                  <span className="text-muted-foreground text-sm">–</span>
+                  <Input
+                    type="date"
+                    value={n.end}
+                    min={n.start}
+                    onChange={(e) => updateNrdField(n.id, 'end', e.target.value)}
+                    className="flex-1"
+                  />
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 text-destructive hover:text-destructive flex-shrink-0"
+                    onClick={() => removeNrd(n.id)}
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </Button>
+                </div>
+              </div>
+            ))}
           </div>
 
           {globalError && (
-            <p className="text-sm text-destructive bg-destructive/10 rounded p-2">{globalError}</p>
+            <p className="text-sm text-destructive bg-destructive/10 rounded p-2">
+              {globalError}
+            </p>
           )}
         </div>
 

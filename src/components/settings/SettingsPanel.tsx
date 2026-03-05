@@ -38,7 +38,7 @@ export function SettingsPanel() {
     .map((emp) => ({
       name: emp.fullName,
       vacDays: emp.vacations.reduce((s, v) => s + intervalDays(v.start, v.end), 0),
-      nrdDays: emp.nrd ? intervalDays(emp.nrd.start, emp.nrd.end) : 0,
+      nrdDays: emp.nrd.reduce((s, n) => s + intervalDays(n.start, n.end), 0),
     }))
     .sort((a, b) => b.vacDays - a.vacDays)
 
