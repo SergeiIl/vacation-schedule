@@ -4,6 +4,7 @@ import path from 'path'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/vacation-schedule/',
   plugins: [react()],
   resolve: {
     alias: {
