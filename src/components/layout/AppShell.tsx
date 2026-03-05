@@ -13,6 +13,7 @@ import { SpecialDatesEditor } from '@/components/specialDates/SpecialDatesEditor
 import { ExportImportPanel } from '@/components/export/ExportImportPanel'
 import { SettingsPanel } from '@/components/settings/SettingsPanel'
 import { Button } from '@/components/ui/Button'
+import { ToastContainer } from '@/components/ui/Toast'
 import { cn } from '@/lib/utils'
 
 type RightPanel = 'special' | 'export' | 'settings'
@@ -89,6 +90,7 @@ export function AppShell() {
 
   return (
     <div className="flex flex-col h-screen bg-background">
+      <ToastContainer />
       <div className="no-print"><Header /></div>
 
       <div className="flex flex-1 overflow-hidden">

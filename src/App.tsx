@@ -3,6 +3,7 @@ import { nanoid } from 'nanoid'
 import { AppShell } from '@/components/layout/AppShell'
 import { useEmployeeStore, useSpecialDateStore, useSettingsStore, applyThemeToDOM } from '@/store'
 import { getAllEmployees, getAllSpecialDates, getSettings } from '@/db/indexedDB'
+import { useVacationRuleCheck } from '@/hooks/useVacationRuleCheck'
 import type { Employee } from '@/types/employee'
 
 function migrateEmployee(raw: unknown): Employee {
@@ -25,6 +26,8 @@ export default function App() {
   const { setEmployees } = useEmployeeStore()
   const { setSpecialDates } = useSpecialDateStore()
   const { applySettings, theme } = useSettingsStore()
+
+  useVacationRuleCheck()
 
   useEffect(() => {
     async function bootstrap() {

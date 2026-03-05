@@ -36,8 +36,8 @@ export function ExportImportPanel() {
 
   const handleExportJSON = () => {
     try {
-      const { planningYear, scale, theme, rowHeight, showWeekends, showNRD, showUnpaidLeave } = settings
-      const json = exportJSON(employees, specialDates, { planningYear, scale, theme, rowHeight, showWeekends, showNRD, showUnpaidLeave })
+      const { planningYear, scale, theme, rowHeight, showWeekends, showNRD, showUnpaidLeave, maxConcurrentVacations } = settings
+      const json = exportJSON(employees, specialDates, { planningYear, scale, theme, rowHeight, showWeekends, showNRD, showUnpaidLeave, maxConcurrentVacations })
       const filename = `vacation-schedule-${format(new Date(), 'yyyy-MM-dd')}.json`
       downloadFile(json, filename, 'application/json')
       showStatus('success', 'JSON успешно экспортирован')

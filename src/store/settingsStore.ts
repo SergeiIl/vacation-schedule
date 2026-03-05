@@ -10,6 +10,7 @@ interface SettingsState extends Settings {
   toggleShowWeekends: () => void
   toggleShowNRD: () => void
   toggleShowUnpaidLeave: () => void
+  setMaxConcurrentVacations: (v: number | null) => void
   applySettings: (s: Partial<Settings>) => void
 }
 
@@ -23,6 +24,7 @@ const FALLBACK: Settings = {
   showWeekends: true,
   showNRD: true,
   showUnpaidLeave: true,
+  maxConcurrentVacations: null,
 }
 
 const MIN_ROW_HEIGHT = 44
@@ -57,6 +59,7 @@ function toPlain(state: SettingsState): Settings {
     showWeekends: state.showWeekends,
     showNRD: state.showNRD,
     showUnpaidLeave: state.showUnpaidLeave,
+    maxConcurrentVacations: state.maxConcurrentVacations,
   }
 }
 
@@ -106,6 +109,11 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
   toggleShowUnpaidLeave: () => {
     const showUnpaidLeave = !get().showUnpaidLeave
     set({ showUnpaidLeave })
+    persist(toPlain(get()))
+  },
+
+  setMaxConcurrentVacations: (maxConcurrentVacations) => {
+    set({ maxConcurrentVacations })
     persist(toPlain(get()))
   },
 

@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { BarChart3 } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Label } from '@/components/ui/Label'
@@ -21,13 +22,17 @@ export function SettingsPanel() {
     showWeekends,
     showNRD,
     showUnpaidLeave,
+    maxConcurrentVacations,
     setScale,
     setYear,
     setRowHeight,
     toggleShowWeekends,
     toggleShowNRD,
     toggleShowUnpaidLeave,
+    setMaxConcurrentVacations,
   } = useSettingsStore()
+
+  const [maxInput, setMaxInput] = useState(String(maxConcurrentVacations ?? ''))
 
   const { employees } = useEmployeeStore()
 
@@ -117,6 +122,48 @@ export function SettingsPanel() {
         <div className="flex items-center justify-between">
           <Label htmlFor="showUnpaidLeave" className="font-normal">Показывать отпуска за свой счёт</Label>
           <Switch id="showUnpaidLeave" checked={showUnpaidLeave} onCheckedChange={toggleShowUnpaidLeave} />
+        </div>
+      </section>
+
+      {/* Rules */}
+      <section className="space-y-3">
+        <Label className="text-sm font-semibold">Правила</Label>
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <Label htmlFor="ruleMaxConcurrent" className="font-normal">
+              Макс. человек в отпуске одновременно
+            </Label>
+            <Switch
+              id="ruleMaxConcurrent"
+              checked={maxConcurrentVacations !== null}
+              onCheckedChange={(checked) => {
+                if (checked) {
+                  const v = parseInt(maxInput) || 5
+                  setMaxInput(String(v))
+                  setMaxConcurrentVacations(v)
+                } else {
+                  setMaxConcurrentVacations(null)
+                }
+              }}
+            />
+          </div>
+          {maxConcurrentVacations !== null && (
+            <div className="flex items-center gap-2 pl-0">
+              <input
+                type="number"
+                min={1}
+                max={999}
+                value={maxInput}
+                onChange={(e) => {
+                  setMaxInput(e.target.value)
+                  const v = parseInt(e.target.value)
+                  if (!isNaN(v) && v > 0) setMaxConcurrentVacations(v)
+                }}
+                className="w-20 h-7 rounded-md border border-input bg-background px-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+              />
+              <span className="text-sm text-muted-foreground">чел.</span>
+            </div>
+          )}
         </div>
       </section>
 

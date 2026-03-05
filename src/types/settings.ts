@@ -9,4 +9,5 @@ export interface Settings {
   showWeekends: boolean
   showNRD: boolean
   showUnpaidLeave: boolean
+  maxConcurrentVacations: number | null
 }
