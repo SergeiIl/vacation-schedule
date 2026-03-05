@@ -46,6 +46,10 @@ interface FormVacation {
 
 const today = new Date().toISOString().slice(0, 10)
 
+function overlaps(a: { start: string; end: string }, b: { start: string; end: string }): boolean {
+  return a.start <= b.end && a.end >= b.start
+}
+
 export function AddEmployeeModal({ employee, onClose }: Props) {
   const { employees, addEmployee, updateEmployee } = useEmployeeStore()
   const { specialDates } = useSpecialDateStore()
@@ -85,7 +89,22 @@ export function AddEmployeeModal({ employee, onClose }: Props) {
 
   const updateNrdField = (id: string, field: 'start' | 'end', value: string) => {
     setNRDs((prev) =>
-      prev.map((n) => (n.id !== id ? n : { ...n, [field]: value })),
+      prev.map((n) => {
+        if (n.id !== id) return n
+        const updated = { ...n, [field]: value }
+        let error: string | undefined
+        if (updated.start > updated.end) {
+          error = 'Дата начала должна быть не позже даты окончания'
+        } else {
+          const cv = vacations.find((v) => overlaps(updated, v))
+          if (cv) error = `Пересекается с отпуском (${cv.start}–${cv.end})`
+          else {
+            const cu = unpaidLeaves.find((u) => overlaps(updated, u))
+            if (cu) error = `Пересекается с отпуском за свой счёт (${cu.start}–${cu.end})`
+          }
+        }
+        return { ...updated, error }
+      }),
     )
   }
 
@@ -99,7 +118,22 @@ export function AddEmployeeModal({ employee, onClose }: Props) {
 
   const updateUnpaidLeaveField = (id: string, field: 'start' | 'end', value: string) => {
     setUnpaidLeaves((prev) =>
-      prev.map((u) => (u.id !== id ? u : { ...u, [field]: value })),
+      prev.map((u) => {
+        if (u.id !== id) return u
+        const updated = { ...u, [field]: value }
+        let error: string | undefined
+        if (updated.start > updated.end) {
+          error = 'Дата начала должна быть не позже даты окончания'
+        } else {
+          const cv = vacations.find((v) => overlaps(updated, v))
+          if (cv) error = `Пересекается с отпуском (${cv.start}–${cv.end})`
+          else {
+            const cn = nrds.find((n) => overlaps(updated, n))
+            if (cn) error = `Пересекается с НРД (${cn.start}–${cn.end})`
+          }
+        }
+        return { ...updated, error }
+      }),
     )
   }
 
@@ -134,10 +168,16 @@ export function AddEmployeeModal({ employee, onClose }: Props) {
           allVacations,
           specialDates,
         )
-        return {
-          ...updated,
-          error: result.valid ? undefined : result.errors[0],
+        let error = result.valid ? undefined : result.errors[0]
+        if (!error) {
+          const cn = nrds.find((n) => overlaps(updated, n))
+          if (cn) error = `Пересекается с НРД (${cn.start}–${cn.end})`
         }
+        if (!error) {
+          const cu = unpaidLeaves.find((u) => overlaps(updated, u))
+          if (cu) error = `Пересекается с отпуском за свой счёт (${cu.start}–${cu.end})`
+        }
+        return { ...updated, error }
       }),
     )
   }
@@ -177,6 +217,72 @@ export function AddEmployeeModal({ employee, onClose }: Props) {
           prev.map((vv) =>
             vv.id === v.id ? { ...vv, error: result.errors[0] } : vv,
           ),
+        )
+        valid = false
+      }
+    }
+
+    // Check NRD
+    const allNrd = nrds.map((n) => ({ id: n.id, start: n.start, end: n.end }))
+    for (const n of nrds) {
+      if (n.start > n.end) {
+        setNRDs((prev) =>
+          prev.map((nn) =>
+            nn.id === n.id ? { ...nn, error: 'Дата начала должна быть не позже даты окончания' } : nn,
+          ),
+        )
+        valid = false
+      }
+    }
+    const nrdOverlap = validateNoSelfOverlap(allNrd)
+    if (!nrdOverlap.valid) {
+      setGlobalError((prev) => prev || nrdOverlap.errors[0])
+      valid = false
+    }
+
+    // Check unpaid leave
+    const allUnpaid = unpaidLeaves.map((u) => ({ id: u.id, start: u.start, end: u.end }))
+    for (const u of unpaidLeaves) {
+      if (u.start > u.end) {
+        setUnpaidLeaves((prev) =>
+          prev.map((uu) =>
+            uu.id === u.id ? { ...uu, error: 'Дата начала должна быть не позже даты окончания' } : uu,
+          ),
+        )
+        valid = false
+        continue
+      }
+    }
+    const unpaidOverlap = validateNoSelfOverlap(allUnpaid)
+    if (!unpaidOverlap.valid) {
+      setGlobalError((prev) => prev || unpaidOverlap.errors[0])
+      valid = false
+    }
+
+    // Cross-type checks
+    for (const n of nrds) {
+      if (n.start > n.end) continue
+      const cv = vacations.find((v) => overlaps(n, v))
+      if (cv) {
+        setNRDs((prev) =>
+          prev.map((nn) => nn.id === n.id && !nn.error ? { ...nn, error: `Пересекается с отпуском (${cv.start}–${cv.end})` } : nn),
+        )
+        valid = false
+      }
+      const cu = unpaidLeaves.find((u) => overlaps(n, u))
+      if (cu) {
+        setNRDs((prev) =>
+          prev.map((nn) => nn.id === n.id && !nn.error ? { ...nn, error: `Пересекается с отпуском за свой счёт (${cu.start}–${cu.end})` } : nn),
+        )
+        valid = false
+      }
+    }
+    for (const u of unpaidLeaves) {
+      if (u.start > u.end) continue
+      const cv = vacations.find((v) => overlaps(u, v))
+      if (cv) {
+        setUnpaidLeaves((prev) =>
+          prev.map((uu) => uu.id === u.id && !uu.error ? { ...uu, error: `Пересекается с отпуском (${cv.start}–${cv.end})` } : uu),
         )
         valid = false
       }
@@ -379,32 +485,37 @@ export function AddEmployeeModal({ employee, onClose }: Props) {
             )}
 
             {nrds.map((n, i) => (
-              <div key={n.id} className="flex items-center gap-2">
-                <span className="text-xs text-muted-foreground w-4">{i + 1}.</span>
-                <div className="flex-1 flex items-center gap-2">
-                  <Input
-                    type="date"
-                    value={n.start}
-                    onChange={(e) => updateNrdField(n.id, 'start', e.target.value)}
-                    className="flex-1"
-                  />
-                  <span className="text-muted-foreground text-sm">–</span>
-                  <Input
-                    type="date"
-                    value={n.end}
-                    min={n.start}
-                    onChange={(e) => updateNrdField(n.id, 'end', e.target.value)}
-                    className="flex-1"
-                  />
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8 text-destructive hover:text-destructive flex-shrink-0"
-                    onClick={() => removeNrd(n.id)}
-                  >
-                    <Trash2 className="h-3.5 w-3.5" />
-                  </Button>
+              <div key={n.id} className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-muted-foreground w-4">{i + 1}.</span>
+                  <div className="flex-1 flex items-center gap-2">
+                    <Input
+                      type="date"
+                      value={n.start}
+                      onChange={(e) => updateNrdField(n.id, 'start', e.target.value)}
+                      className="flex-1"
+                    />
+                    <span className="text-muted-foreground text-sm">–</span>
+                    <Input
+                      type="date"
+                      value={n.end}
+                      min={n.start}
+                      onChange={(e) => updateNrdField(n.id, 'end', e.target.value)}
+                      className="flex-1"
+                    />
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 text-destructive hover:text-destructive flex-shrink-0"
+                      onClick={() => removeNrd(n.id)}
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </Button>
+                  </div>
                 </div>
+                {n.error && (
+                  <p className="text-xs text-destructive ml-6">{n.error}</p>
+                )}
               </div>
             ))}
           </div>
@@ -426,32 +537,37 @@ export function AddEmployeeModal({ employee, onClose }: Props) {
             )}
 
             {unpaidLeaves.map((u, i) => (
-              <div key={u.id} className="flex items-center gap-2">
-                <span className="text-xs text-muted-foreground w-4">{i + 1}.</span>
-                <div className="flex-1 flex items-center gap-2">
-                  <Input
-                    type="date"
-                    value={u.start}
-                    onChange={(e) => updateUnpaidLeaveField(u.id, 'start', e.target.value)}
-                    className="flex-1"
-                  />
-                  <span className="text-muted-foreground text-sm">–</span>
-                  <Input
-                    type="date"
-                    value={u.end}
-                    min={u.start}
-                    onChange={(e) => updateUnpaidLeaveField(u.id, 'end', e.target.value)}
-                    className="flex-1"
-                  />
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8 text-destructive hover:text-destructive flex-shrink-0"
-                    onClick={() => removeUnpaidLeave(u.id)}
-                  >
-                    <Trash2 className="h-3.5 w-3.5" />
-                  </Button>
+              <div key={u.id} className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-muted-foreground w-4">{i + 1}.</span>
+                  <div className="flex-1 flex items-center gap-2">
+                    <Input
+                      type="date"
+                      value={u.start}
+                      onChange={(e) => updateUnpaidLeaveField(u.id, 'start', e.target.value)}
+                      className="flex-1"
+                    />
+                    <span className="text-muted-foreground text-sm">–</span>
+                    <Input
+                      type="date"
+                      value={u.end}
+                      min={u.start}
+                      onChange={(e) => updateUnpaidLeaveField(u.id, 'end', e.target.value)}
+                      className="flex-1"
+                    />
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 text-destructive hover:text-destructive flex-shrink-0"
+                      onClick={() => removeUnpaidLeave(u.id)}
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </Button>
+                  </div>
                 </div>
+                {u.error && (
+                  <p className="text-xs text-destructive ml-6">{u.error}</p>
+                )}
               </div>
             ))}
           </div>
