@@ -1,12 +1,23 @@
+import { useState } from 'react'
 import { AlertCircle, Copy, Pencil, Trash2 } from 'lucide-react'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from '@/components/ui/Dialog'
 import { useEmployeeStore } from '@/store'
 import { useSpecialDateStore } from '@/store'
 import type { Employee } from '@/types/employee'
 import { intervalDays } from '@/utils/dateUtils'
 import { checkConflicts } from '@/utils/validation'
 import { cn } from '@/lib/utils'
+
+const SKIP_KEY = 'confirm-delete-employee-skip'
 
 interface Props {
   employee: Employee
@@ -18,6 +29,8 @@ export function EmployeeListItem({ employee, onEdit, style }: Props) {
   const { selected, setSelected, removeEmployee, duplicateEmployee } = useEmployeeStore()
   const { specialDates } = useSpecialDateStore()
   const isSelected = selected === employee.id
+  const [confirmOpen, setConfirmOpen] = useState(false)
+  const [skipNextTime, setSkipNextTime] = useState(false)
 
   const totalVacDays = employee.vacations.reduce((sum, v) => sum + intervalDays(v.start, v.end), 0)
   const hasConflict = checkConflicts(employee.vacations, specialDates)
@@ -88,8 +101,11 @@ export function EmployeeListItem({ employee, onEdit, style }: Props) {
           className="h-6 w-6 text-destructive hover:text-destructive"
           onClick={(e) => {
             e.stopPropagation()
-            if (confirm(`Удалить сотрудника «${employee.fullName}»?`)) {
+            if (localStorage.getItem(SKIP_KEY) === '1') {
               removeEmployee(employee.id)
+            } else {
+              setSkipNextTime(false)
+              setConfirmOpen(true)
             }
           }}
           title="Удалить"
@@ -97,6 +113,45 @@ export function EmployeeListItem({ employee, onEdit, style }: Props) {
           <Trash2 className="h-3.5 w-3.5" />
         </Button>
       </div>
+
+      <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+        <DialogContent className="max-w-sm" onClick={(e) => e.stopPropagation()}>
+          <DialogHeader>
+            <DialogTitle>Удалить сотрудника</DialogTitle>
+            <DialogDescription>
+              Вы уверены, что хотите удалить{' '}
+              <span className="font-medium text-foreground">«{employee.fullName}»</span>?
+              Это действие можно отменить через Ctrl+Z.
+            </DialogDescription>
+          </DialogHeader>
+
+          <label className="flex items-center gap-2 text-sm text-muted-foreground cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={skipNextTime}
+              onChange={(e) => setSkipNextTime(e.target.checked)}
+              className="accent-primary"
+            />
+            Больше не спрашивать
+          </label>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setConfirmOpen(false)}>
+              Отмена
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={() => {
+                if (skipNextTime) localStorage.setItem(SKIP_KEY, '1')
+                setConfirmOpen(false)
+                removeEmployee(employee.id)
+              }}
+            >
+              Удалить
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

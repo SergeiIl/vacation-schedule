@@ -15,7 +15,8 @@ interface EmployeeState {
   searchQuery: string
   filterNRD: boolean | null
   filterActiveVacation: boolean
-  filterPosition: string | null
+  filterPositions: string[]
+  filterColor: string | null
 
   // Undo/Redo
   past: Employee[][]
@@ -32,7 +33,8 @@ interface EmployeeState {
   setSearchQuery: (q: string) => void
   setFilterNRD: (v: boolean | null) => void
   setFilterActiveVacation: (v: boolean) => void
-  setFilterPosition: (v: string | null) => void
+  setFilterPositions: (v: string[]) => void
+  setFilterColor: (v: string | null) => void
   addVacation: (employeeId: string, interval: Omit<VacationInterval, 'id'>) => void
   updateVacation: (employeeId: string, vacationId: string, interval: Partial<VacationInterval>) => void
   removeVacation: (employeeId: string, vacationId: string) => void
@@ -66,7 +68,8 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
   searchQuery: '',
   filterNRD: null,
   filterActiveVacation: false,
-  filterPosition: null,
+  filterPositions: [],
+  filterColor: null,
   past: [],
   future: [],
 
@@ -161,7 +164,8 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
   setSearchQuery: (searchQuery) => set({ searchQuery }),
   setFilterNRD: (filterNRD) => set({ filterNRD }),
   setFilterActiveVacation: (filterActiveVacation) => set({ filterActiveVacation }),
-  setFilterPosition: (filterPosition) => set({ filterPosition }),
+  setFilterPositions: (filterPositions) => set({ filterPositions }),
+  setFilterColor: (filterColor) => set({ filterColor }),
 
   addVacation: (employeeId, interval) => {
     const vacation: VacationInterval = { ...interval, id: nanoid() }
@@ -307,7 +311,7 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
   },
 
   filteredEmployees: (_specialDates?: SpecialDate[]) => {
-    const { employees, searchQuery, filterNRD, filterActiveVacation, filterPosition } = get()
+    const { employees, searchQuery, filterNRD, filterActiveVacation, filterPositions, filterColor } = get()
     let result = [...employees].sort((a, b) => a.order - b.order)
 
     if (searchQuery.trim()) {
@@ -323,8 +327,12 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
       result = result.filter(isCurrentlyOnVacation)
     }
 
-    if (filterPosition !== null) {
-      result = result.filter((e) => (e.position ?? '') === filterPosition)
+    if (filterPositions.length > 0) {
+      result = result.filter((e) => filterPositions.includes(e.position ?? ''))
+    }
+
+    if (filterColor !== null) {
+      result = result.filter((e) => (e.color ?? '') === filterColor)
     }
 
     return result

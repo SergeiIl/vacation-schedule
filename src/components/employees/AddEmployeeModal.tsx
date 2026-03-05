@@ -11,6 +11,7 @@ import {
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Label } from '@/components/ui/Label'
+import { DateRangePicker } from '@/components/ui/DateRangePicker'
 import { useEmployeeStore } from '@/store'
 import { useSpecialDateStore } from '@/store'
 import type { Employee, VacationInterval, NRD, UnpaidLeave } from '@/types/employee'
@@ -433,22 +434,13 @@ export function AddEmployeeModal({ employee, onClose }: Props) {
                     {i + 1}.
                   </span>
                   <div className="flex-1 flex items-center gap-2">
-                    <Input
-                      type="date"
-                      value={v.start}
-                      onChange={(e) =>
-                        updateVacation(v.id, 'start', e.target.value)
-                      }
-                      className="flex-1"
-                    />
-                    <span className="text-muted-foreground text-sm">–</span>
-                    <Input
-                      type="date"
-                      value={v.end}
-                      min={v.start}
-                      onChange={(e) =>
-                        updateVacation(v.id, 'end', e.target.value)
-                      }
+                    <DateRangePicker
+                      start={v.start}
+                      end={v.end}
+                      onChange={(s, e) => {
+                        updateVacation(v.id, 'start', s)
+                        updateVacation(v.id, 'end', e)
+                      }}
                       className="flex-1"
                     />
                     <Button
@@ -489,18 +481,13 @@ export function AddEmployeeModal({ employee, onClose }: Props) {
                 <div className="flex items-center gap-2">
                   <span className="text-xs text-muted-foreground w-4">{i + 1}.</span>
                   <div className="flex-1 flex items-center gap-2">
-                    <Input
-                      type="date"
-                      value={n.start}
-                      onChange={(e) => updateNrdField(n.id, 'start', e.target.value)}
-                      className="flex-1"
-                    />
-                    <span className="text-muted-foreground text-sm">–</span>
-                    <Input
-                      type="date"
-                      value={n.end}
-                      min={n.start}
-                      onChange={(e) => updateNrdField(n.id, 'end', e.target.value)}
+                    <DateRangePicker
+                      start={n.start}
+                      end={n.end}
+                      onChange={(s, e) => {
+                        updateNrdField(n.id, 'start', s)
+                        updateNrdField(n.id, 'end', e)
+                      }}
                       className="flex-1"
                     />
                     <Button
@@ -541,18 +528,13 @@ export function AddEmployeeModal({ employee, onClose }: Props) {
                 <div className="flex items-center gap-2">
                   <span className="text-xs text-muted-foreground w-4">{i + 1}.</span>
                   <div className="flex-1 flex items-center gap-2">
-                    <Input
-                      type="date"
-                      value={u.start}
-                      onChange={(e) => updateUnpaidLeaveField(u.id, 'start', e.target.value)}
-                      className="flex-1"
-                    />
-                    <span className="text-muted-foreground text-sm">–</span>
-                    <Input
-                      type="date"
-                      value={u.end}
-                      min={u.start}
-                      onChange={(e) => updateUnpaidLeaveField(u.id, 'end', e.target.value)}
+                    <DateRangePicker
+                      start={u.start}
+                      end={u.end}
+                      onChange={(s, e) => {
+                        updateUnpaidLeaveField(u.id, 'start', s)
+                        updateUnpaidLeaveField(u.id, 'end', e)
+                      }}
                       className="flex-1"
                     />
                     <Button
