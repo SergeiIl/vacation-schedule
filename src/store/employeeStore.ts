@@ -27,6 +27,7 @@ interface EmployeeState {
   removeEmployee: (id: string) => void
   duplicateEmployee: (id: string) => void
   reorderEmployee: (id: string, newOrder: number) => void
+  reorderEmployees: (orderedIds: string[]) => void
   setSelected: (id: string | null) => void
   setSearchQuery: (q: string) => void
   setFilterNRD: (v: boolean | null) => void
@@ -125,6 +126,24 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
     })
   },
 
+  reorderEmployees: (orderedIds) => {
+    set((s) => {
+      const byId = new Map(s.employees.map((e) => [e.id, e]))
+      const reordered = orderedIds
+        .map((id) => byId.get(id))
+        .filter((e): e is Employee => e !== undefined)
+      const mentionedSet = new Set(orderedIds)
+      const rest = s.employees.filter((e) => !mentionedSet.has(e.id))
+      const all = [...reordered, ...rest].map((e, i) => ({ ...e, order: i }))
+      bulkPutEmployees(all).catch(console.error)
+      return {
+        employees: all,
+        past: [...s.past.slice(-MAX_HISTORY), s.employees],
+        future: [],
+      }
+    })
+  },
+
   setSelected: (id) => set({ selected: id }),
   setSearchQuery: (searchQuery) => set({ searchQuery }),
   setFilterNRD: (filterNRD) => set({ filterNRD }),
@@ -198,7 +217,7 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
 
   filteredEmployees: (_specialDates?: SpecialDate[]) => {
     const { employees, searchQuery, filterNRD, filterActiveVacation, filterPosition } = get()
-    let result = employees
+    let result = [...employees].sort((a, b) => a.order - b.order)
 
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase()

@@ -46,6 +46,17 @@ function saveToLS(state: Settings) {
   }
 }
 
+function toPlain(state: SettingsState): Settings {
+  return {
+    planningYear: state.planningYear,
+    scale: state.scale,
+    theme: state.theme,
+    rowHeight: state.rowHeight,
+    showWeekends: state.showWeekends,
+    showNRD: state.showNRD,
+  }
+}
+
 function persist(state: Settings) {
   saveToLS(state)
   putSettings(state).catch(console.error)
@@ -58,44 +69,41 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
 
   setScale: (scale) => {
     set({ scale })
-    persist({ ...get(), scale })
+    persist(toPlain(get()))
   },
 
   setYear: (planningYear) => {
     set({ planningYear })
-    persist({ ...get(), planningYear })
+    persist(toPlain(get()))
   },
 
   setTheme: (theme) => {
     set({ theme })
     applyThemeToDOM(theme)
-    persist({ ...get(), theme })
+    persist(toPlain(get()))
   },
 
   setRowHeight: (rowHeight) => {
     set({ rowHeight })
-    persist({ ...get(), rowHeight })
+    persist(toPlain(get()))
   },
 
   toggleShowWeekends: () => {
     const showWeekends = !get().showWeekends
     set({ showWeekends })
-    persist({ ...get(), showWeekends })
+    persist(toPlain(get()))
   },
 
   toggleShowNRD: () => {
     const showNRD = !get().showNRD
     set({ showNRD })
-    persist({ ...get(), showNRD })
+    persist(toPlain(get()))
   },
 
   applySettings: (s) => {
-    set((prev) => {
-      const next = { ...prev, ...s }
-      persist(next)
-      return next
-    })
+    set((prev) => ({ ...prev, ...s }))
     if (s.theme) applyThemeToDOM(s.theme)
+    persist(toPlain(get()))
   },
 }))
 
