@@ -37,7 +37,7 @@ export function GanttFooter({ totalWidth, employees }: Props) {
     // Compute per-day vacation + NRD counts
     const counts = new Array(totalDays).fill(0)
     for (const emp of employees) {
-      for (const v of [...emp.vacations, ...emp.nrd]) {
+      for (const v of [...emp.vacations, ...emp.nrd, ...emp.unpaidLeave]) {
         const startDay = Math.max(0, differenceInCalendarDays(parseISO(v.start), chartStart))
         const endDay = Math.min(totalDays - 1, differenceInCalendarDays(parseISO(v.end), chartStart))
         for (let d = startDay; d <= endDay; d++) {
@@ -66,6 +66,28 @@ export function GanttFooter({ totalWidth, employees }: Props) {
         ctx.font = `bold ${ppd >= 24 ? 11 : 9}px sans-serif`
         ctx.textAlign = 'center'
         ctx.fillText(String(count), x + ppd / 2, FOOTER_HEIGHT - barH - 3)
+      }
+    }
+
+    // In month scale, show one number centered over each contiguous filled block
+    if (scale === 'month') {
+      let d = 0
+      while (d < totalDays) {
+        if (counts[d] === 0) { d++; continue }
+        const blockStart = d
+        let blockMax = 0
+        while (d < totalDays && counts[d] > 0) {
+          if (counts[d] > blockMax) blockMax = counts[d]
+          d++
+        }
+        const blockEnd = d - 1
+        const ratio = blockMax / maxCount
+        const barH = Math.max(3, ratio * maxBarH)
+        const centerX = ((blockStart + blockEnd + 1) / 2) * ppd
+        ctx.fillStyle = ratio >= 0.8 ? '#1e40af' : '#2563eb'
+        ctx.font = 'bold 10px sans-serif'
+        ctx.textAlign = 'center'
+        ctx.fillText(String(blockMax), centerX, FOOTER_HEIGHT - barH - 3)
       }
     }
   }, [totalWidth, employees, scale, planningYear])

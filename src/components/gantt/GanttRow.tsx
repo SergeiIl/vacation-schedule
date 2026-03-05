@@ -23,7 +23,7 @@ export function GanttRow({ employee, rowIndex }: Props) {
       style={{ height: rowHeight }}
     >
       {bars.map((bar) => (
-        <GanttBar key={`${bar.employeeId}:${bar.vacationId}`} bar={bar} rowHeight={rowHeight} />
+        <GanttBar key={`${bar.employeeId}:${bar.vacationId}`} bar={bar} rowHeight={rowHeight} allBars={bars} />
       ))}
     </div>
   )

@@ -1,6 +1,5 @@
 import { useRef, useState } from 'react'
 import { format } from 'date-fns'
-import { ru } from 'date-fns/locale'
 import { useDragContext } from './DnDHandler'
 import { GanttTooltip } from './GanttTooltip'
 import { computeDragPreview } from '@/utils/ganttLayout'
@@ -12,9 +11,10 @@ import { cn } from '@/lib/utils'
 interface Props {
   bar: GanttBarType
   rowHeight: number
+  allBars: GanttBarType[]
 }
 
-export function GanttBar({ bar, rowHeight }: Props) {
+export function GanttBar({ bar, rowHeight, allBars }: Props) {
   const { dragState, startDrag } = useDragContext()
   const { scale, planningYear } = useSettingsStore()
   const leftHandleRef = useRef<HTMLDivElement>(null)
@@ -40,15 +40,25 @@ export function GanttBar({ bar, rowHeight }: Props) {
   }
 
   const barHeight = rowHeight - 8
+  const barTop = (rowHeight - barHeight) / 2
   const days = intervalDays(
     format(displayStart, 'yyyy-MM-dd'),
     format(displayEnd, 'yyyy-MM-dd'),
   )
-  const label = displayWidth > 50
-    ? `${format(displayStart, 'd MMM', { locale: ru })} – ${format(displayEnd, 'd MMM', { locale: ru })}`
-    : displayWidth > 24
-    ? `${days}д`
+  const insideLabel = displayWidth > 20 ? `${days}д` : ''
+
+  const GAP = 6
+  const rightEdge = displayX + displayWidth
+  const hasRightNeighbor = allBars.some(
+    (b) => b.vacationId !== bar.vacationId && b.x >= rightEdge - 1 && b.x <= rightEdge + GAP,
+  )
+  const hasLeftNeighbor = allBars.some(
+    (b) => b.vacationId !== bar.vacationId && (b.x + b.width) <= displayX + 1 && (b.x + b.width) >= displayX - GAP,
+  )
+  const dateLabel = displayWidth >= 8
+    ? `${format(displayStart, 'dd.MM')}-${format(displayEnd, 'dd.MM')}`
     : ''
+  const outsideSide = !hasRightNeighbor ? 'right' : !hasLeftNeighbor ? 'left' : null
 
   return (
     <>
@@ -96,9 +106,9 @@ export function GanttBar({ bar, rowHeight }: Props) {
           }}
         />
 
-        {label && (
-          <span className="relative z-[2] text-xs px-2 py-0.5 truncate pointer-events-none select-none leading-none flex items-center h-full">
-            {label}
+        {insideLabel && (
+          <span className="absolute inset-0 z-[2] text-xs pointer-events-none select-none flex items-center justify-center">
+            {insideLabel}
           </span>
         )}
 
@@ -112,6 +122,23 @@ export function GanttBar({ bar, rowHeight }: Props) {
           }}
         />
       </div>
+
+      {dateLabel && outsideSide && (
+        <span
+          className="absolute z-[2] text-xs pointer-events-none select-none text-gray-600 dark:text-gray-300 whitespace-nowrap"
+          style={{
+            top: barTop,
+            height: barHeight,
+            display: 'flex',
+            alignItems: 'center',
+            ...(outsideSide === 'right'
+              ? { left: rightEdge + 4 }
+              : { left: displayX - 4, transform: 'translateX(-100%)' }),
+          }}
+        >
+          {dateLabel}
+        </span>
+      )}
 
       {tooltipPos && !isDragging && (
         <GanttTooltip

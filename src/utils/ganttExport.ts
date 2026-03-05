@@ -1,4 +1,4 @@
-import { addDays, isWeekend, format, differenceInCalendarDays } from 'date-fns'
+import { addDays, isWeekend, format, differenceInCalendarDays, getDaysInMonth, addMonths } from 'date-fns'
 import { ru } from 'date-fns/locale'
 import type { Employee } from '@/types/employee'
 import type { SpecialDate } from '@/types/specialDate'
@@ -14,6 +14,7 @@ import {
   buildHeaderCells,
 } from './dateUtils'
 import { buildBarsForEmployee } from './ganttLayout'
+import { FOOTER_HEIGHT } from '../components/gantt/GanttFooter'
 
 export type ExportFormat = 'png' | 'jpeg'
 
@@ -41,7 +42,7 @@ export function exportGantt(opts: GanttExportOptions, fmt: ExportFormat): void {
   const chartW = totalDays * ppd
   const totalH = employees.length * rowHeight
   const canvasW = sidebarWidth + chartW
-  const canvasH = HEADER_H + totalH
+  const canvasH = HEADER_H + totalH + FOOTER_HEIGHT
 
   const canvas = document.createElement('canvas')
   canvas.width = canvasW * EXPORT_DPR
@@ -222,6 +223,63 @@ export function exportGantt(opts: GanttExportOptions, fmt: ExportFormat): void {
         ctx.textAlign = 'center'
         ctx.fillText(`${days}д`, barX + barW / 2, barY + barH / 2, barW - 4)
       }
+    }
+  }
+
+  // ── Footer: per-day counts bar chart ─────────────────────────────────────────
+  const footerY = HEADER_H + totalH
+  ctx.fillStyle = 'rgba(0,0,0,0.03)'
+  ctx.fillRect(0, footerY, canvasW, FOOTER_HEIGHT)
+  ctx.strokeStyle = 'rgba(0,0,0,0.10)'
+  ctx.lineWidth = 1
+  ctx.beginPath(); ctx.moveTo(0, footerY); ctx.lineTo(canvasW, footerY); ctx.stroke()
+
+  const footerCounts = new Array(totalDays).fill(0)
+  for (const emp of employees) {
+    for (const v of [...emp.vacations, ...emp.nrd, ...emp.unpaidLeave]) {
+      const startDay = Math.max(0, differenceInCalendarDays(new Date(v.start), chartStart))
+      const endDay = Math.min(totalDays - 1, differenceInCalendarDays(new Date(v.end), chartStart))
+      for (let d = startDay; d <= endDay; d++) footerCounts[d]++
+    }
+  }
+
+  const footerMax = Math.max(...footerCounts, 1)
+  const maxBarH = FOOTER_HEIGHT - 14
+
+  for (let d = 0; d < totalDays; d++) {
+    const count = footerCounts[d]
+    if (count === 0) continue
+    const x = sidebarWidth + d * ppd
+    const ratio = count / footerMax
+    const barH = Math.max(3, ratio * maxBarH)
+    ctx.fillStyle = `rgba(59, 130, 246, ${0.2 + ratio * 0.7})`
+    const gap = ppd > 4 ? 1 : 0
+    ctx.fillRect(x, footerY + FOOTER_HEIGHT - barH, ppd - gap, barH)
+    if (ppd >= 14) {
+      ctx.fillStyle = ratio >= 0.8 ? '#1e40af' : '#2563eb'
+      ctx.font = `bold ${ppd >= 24 ? 11 : 9}px system-ui, sans-serif`
+      ctx.textAlign = 'center'
+      ctx.fillText(String(count), x + ppd / 2, footerY + FOOTER_HEIGHT - barH - 3)
+    }
+  }
+
+  if (scale === 'month') {
+    for (let m = 0; m < 12; m++) {
+      const monthStart = addMonths(chartStart, m)
+      const dayOffset = differenceInCalendarDays(monthStart, chartStart)
+      const daysInMonth = getDaysInMonth(monthStart)
+      let maxInMonth = 0
+      for (let d = dayOffset; d < dayOffset + daysInMonth && d < totalDays; d++) {
+        if (footerCounts[d] > maxInMonth) maxInMonth = footerCounts[d]
+      }
+      if (maxInMonth === 0) continue
+      const ratio = maxInMonth / footerMax
+      const barH = Math.max(3, ratio * maxBarH)
+      const centerX = sidebarWidth + (dayOffset + daysInMonth / 2) * ppd
+      ctx.fillStyle = ratio >= 0.8 ? '#1e40af' : '#2563eb'
+      ctx.font = 'bold 10px system-ui, sans-serif'
+      ctx.textAlign = 'center'
+      ctx.fillText(String(maxInMonth), centerX, footerY + FOOTER_HEIGHT - barH - 3)
     }
   }
 
