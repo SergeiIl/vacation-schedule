@@ -36,8 +36,8 @@ export function ExportImportPanel() {
 
   const handleExportJSON = () => {
     try {
-      const { planningYear, scale, theme, rowHeight, showWeekends, showNRD } = settings
-      const json = exportJSON(employees, specialDates, { planningYear, scale, theme, rowHeight, showWeekends, showNRD })
+      const { planningYear, scale, theme, rowHeight, showWeekends, showNRD, showUnpaidLeave } = settings
+      const json = exportJSON(employees, specialDates, { planningYear, scale, theme, rowHeight, showWeekends, showNRD, showUnpaidLeave })
       const filename = `vacation-schedule-${format(new Date(), 'yyyy-MM-dd')}.json`
       downloadFile(json, filename, 'application/json')
       showStatus('success', 'JSON успешно экспортирован')
@@ -108,12 +108,14 @@ export function ExportImportPanel() {
         if (existing) {
           existing.vacations = match.vacations.map((v) => ({ ...v, id: nanoid() }))
           existing.nrd = match.nrd.map((n) => ({ ...n, id: nanoid() }))
+          existing.unpaidLeave = match.unpaidLeave.map((u) => ({ ...u, id: nanoid() }))
         } else {
           updatedEmployees.push({
             id: nanoid(),
             fullName: match.fullName,
             vacations: match.vacations.map((v) => ({ ...v, id: nanoid() })),
             nrd: match.nrd.map((n) => ({ ...n, id: nanoid() })),
+            unpaidLeave: match.unpaidLeave.map((u) => ({ ...u, id: nanoid() })),
             order: updatedEmployees.length,
             createdAt: new Date().toISOString(),
           })

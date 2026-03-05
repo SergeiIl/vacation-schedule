@@ -28,7 +28,7 @@ function getSidebarWidth(): number {
 export function Header() {
   const { undo, redo, past, future, filteredEmployees } = useEmployeeStore()
   const { specialDates } = useSpecialDateStore()
-  const { planningYear, scale, rowHeight, showWeekends, showNRD, theme, setTheme } = useSettingsStore()
+  const { planningYear, scale, rowHeight, showWeekends, showNRD, showUnpaidLeave, theme, setTheme } = useSettingsStore()
 
   const scaleLabel = { day: 'День', week: 'Неделя', month: 'Месяц' }[scale]
 
@@ -43,6 +43,7 @@ export function Header() {
         sidebarWidth: getSidebarWidth(),
         showWeekends,
         showNRD,
+        showUnpaidLeave,
       },
       fmt,
     )

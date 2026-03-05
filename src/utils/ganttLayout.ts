@@ -10,6 +10,7 @@ export function buildBarsForEmployee(
   scale: Scale,
   showNRD: boolean,
   rowIndex: number,
+  showUnpaidLeave: boolean = true,
 ): GanttBar[] {
   const chartStart = getChartStartDate(year)
   const ppd = PIXELS_PER_DAY[scale]
@@ -43,6 +44,25 @@ export function buildBarsForEmployee(
         employeeId: employee.id,
         vacationId: nrd.id,
         type: 'nrd',
+        startDate,
+        endDate,
+        x,
+        width: endX - x,
+        rowIndex,
+      })
+    }
+  }
+
+  if (showUnpaidLeave) {
+    for (const leave of (employee.unpaidLeave ?? [])) {
+      const startDate = parseISO(leave.start)
+      const endDate = parseISO(leave.end)
+      const x = dateToPixel(startDate, chartStart, ppd)
+      const endX = dateToPixel(endDate, chartStart, ppd) + ppd
+      bars.push({
+        employeeId: employee.id,
+        vacationId: leave.id,
+        type: 'unpaid',
         startDate,
         endDate,
         x,

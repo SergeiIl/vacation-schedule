@@ -29,7 +29,7 @@ export function DnDHandler({ children }: Props) {
   const dragStateRef = useRef<DragState | null>(null)
   dragStateRef.current = dragState
 
-  const { updateVacation, updateNRD } = useEmployeeStore()
+  const { updateVacation, updateNRD, updateUnpaidLeave } = useEmployeeStore()
   const { specialDates } = useSpecialDateStore()
   const { scale, planningYear } = useSettingsStore()
 
@@ -92,7 +92,7 @@ export function DnDHandler({ children }: Props) {
       const employee = employees.find((e) => e.id === empId)
       const employeeVacations = employee?.vacations ?? []
 
-      const valid = ds.barType === 'nrd'
+      const valid = ds.barType === 'nrd' || ds.barType === 'unpaid'
         ? newStart <= newEnd
         : isIntervalValid(newStart, newEnd, employeeVacations, vacId, specialDates)
 
@@ -110,6 +110,8 @@ export function DnDHandler({ children }: Props) {
 
         if (ds.barType === 'nrd') {
           updateNRD(empId, vacId, { start: startStr, end: endStr })
+        } else if (ds.barType === 'unpaid') {
+          updateUnpaidLeave(empId, vacId, { start: startStr, end: endStr })
         } else {
           updateVacation(empId, vacId, { start: startStr, end: endStr })
         }
@@ -124,7 +126,7 @@ export function DnDHandler({ children }: Props) {
       window.removeEventListener('pointermove', onPointerMove)
       window.removeEventListener('pointerup', onPointerUp)
     }
-  }, [dragState?.active, pixelsPerDay, specialDates, planningYear, updateVacation, updateNRD])
+  }, [dragState?.active, pixelsPerDay, specialDates, planningYear, updateVacation, updateNRD, updateUnpaidLeave])
 
   return (
     <DragContext.Provider value={{ dragState, startDrag }}>

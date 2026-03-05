@@ -39,6 +39,10 @@ export function exportCSV(employees: Employee[]): string {
       const days = intervalDays(nrd.start, nrd.end)
       rows.push(`${emp.fullName},НРД,${nrd.start},${nrd.end},${days}`)
     }
+    for (const u of emp.unpaidLeave) {
+      const days = intervalDays(u.start, u.end)
+      rows.push(`${emp.fullName},За свой счёт,${u.start},${u.end},${days}`)
+    }
   }
 
   return rows.join('\n')
@@ -80,6 +84,7 @@ export interface CSVImportResult {
     fullName: string
     vacations: Omit<VacationInterval, 'id'>[]
     nrd: { start: string; end: string }[]
+    unpaidLeave: { start: string; end: string }[]
   }>
   skippedRows: string[]
 }
@@ -94,7 +99,7 @@ export function importCSV(raw: string): CSVImportResult {
   }
 
   const dataLines = lines.slice(1)
-  const byName = new Map<string, { vacations: Omit<VacationInterval, 'id'>[]; nrd: { start: string; end: string }[] }>()
+  const byName = new Map<string, { vacations: Omit<VacationInterval, 'id'>[]; nrd: { start: string; end: string }[]; unpaidLeave: { start: string; end: string }[] }>()
   const skippedRows: string[] = []
 
   for (const line of dataLines) {
@@ -121,13 +126,15 @@ export function importCSV(raw: string): CSVImportResult {
     }
 
     if (!byName.has(fullName)) {
-      byName.set(fullName, { vacations: [], nrd: [] })
+      byName.set(fullName, { vacations: [], nrd: [], unpaidLeave: [] })
     }
 
     const entry = byName.get(fullName)!
 
     if (type === 'НРД') {
       entry.nrd.push({ start, end })
+    } else if (type === 'За свой счёт') {
+      entry.unpaidLeave.push({ start, end })
     } else {
       entry.vacations.push({ start, end })
     }

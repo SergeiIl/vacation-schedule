@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { nanoid } from 'nanoid'
-import type { Employee, VacationInterval, NRD } from '@/types/employee'
+import type { Employee, VacationInterval, NRD, UnpaidLeave } from '@/types/employee'
 import {
   putEmployee,
   deleteEmployee as dbDeleteEmployee,
@@ -40,6 +40,9 @@ interface EmployeeState {
   addNRD: (employeeId: string, interval: Omit<NRD, 'id'>) => void
   updateNRD: (employeeId: string, nrdId: string, interval: Partial<Omit<NRD, 'id'>>) => void
   removeNRD: (employeeId: string, nrdId: string) => void
+  addUnpaidLeave: (employeeId: string, interval: Omit<UnpaidLeave, 'id'>) => void
+  updateUnpaidLeave: (employeeId: string, leaveId: string, interval: Partial<Omit<UnpaidLeave, 'id'>>) => void
+  removeUnpaidLeave: (employeeId: string, leaveId: string) => void
   undo: () => void
   redo: () => void
   filteredEmployees: (specialDates?: SpecialDate[]) => Employee[]
@@ -49,6 +52,10 @@ interface EmployeeState {
 function isCurrentlyOnVacation(employee: Employee): boolean {
   const today = new Date().toISOString().slice(0, 10)
   return employee.vacations.some((v) => v.start <= today && v.end >= today)
+}
+
+function normalizeEmployee(emp: Employee): Employee {
+  return { ...emp, unpaidLeave: emp.unpaidLeave ?? [] }
 }
 
 const MAX_HISTORY = 50
@@ -63,12 +70,13 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
   past: [],
   future: [],
 
-  setEmployees: (employees) => set({ employees }),
+  setEmployees: (employees) => set({ employees: employees.map(normalizeEmployee) }),
 
   addEmployee: (data) => {
     const { employees } = get()
     const emp: Employee = {
       ...data,
+      unpaidLeave: data.unpaidLeave ?? [],
       id: nanoid(),
       createdAt: new Date().toISOString(),
       order: employees.length,
@@ -111,6 +119,7 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
       order: employees.length,
       vacations: source.vacations.map((v) => ({ ...v, id: nanoid() })),
       nrd: source.nrd.map((n) => ({ ...n, id: nanoid() })),
+      unpaidLeave: source.unpaidLeave.map((u) => ({ ...u, id: nanoid() })),
     }
     set((s) => ({
       employees: [...s.employees, newEmp],
@@ -241,6 +250,45 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
     })
   },
 
+  addUnpaidLeave: (employeeId, interval) => {
+    const leave: UnpaidLeave = { ...interval, id: nanoid() }
+    set((s) => {
+      const employees = s.employees.map((e) =>
+        e.id === employeeId ? { ...e, unpaidLeave: [...e.unpaidLeave, leave] } : e,
+      )
+      const updated = employees.find((e) => e.id === employeeId)
+      if (updated) putEmployee(updated).catch(console.error)
+      return { employees, past: [...s.past.slice(-MAX_HISTORY), s.employees], future: [] }
+    })
+  },
+
+  updateUnpaidLeave: (employeeId, leaveId, interval) => {
+    set((s) => {
+      const employees = s.employees.map((e) => {
+        if (e.id !== employeeId) return e
+        return {
+          ...e,
+          unpaidLeave: e.unpaidLeave.map((u) => (u.id === leaveId ? { ...u, ...interval } : u)),
+        }
+      })
+      const updated = employees.find((e) => e.id === employeeId)
+      if (updated) putEmployee(updated).catch(console.error)
+      return { employees, past: [...s.past.slice(-MAX_HISTORY), s.employees], future: [] }
+    })
+  },
+
+  removeUnpaidLeave: (employeeId, leaveId) => {
+    set((s) => {
+      const employees = s.employees.map((e) => {
+        if (e.id !== employeeId) return e
+        return { ...e, unpaidLeave: e.unpaidLeave.filter((u) => u.id !== leaveId) }
+      })
+      const updated = employees.find((e) => e.id === employeeId)
+      if (updated) putEmployee(updated).catch(console.error)
+      return { employees, past: [...s.past.slice(-MAX_HISTORY), s.employees], future: [] }
+    })
+  },
+
   undo: () => {
     const { past, employees, future } = get()
     if (past.length === 0) return
@@ -283,8 +331,9 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
   },
 
   importEmployees: async (employees) => {
+    const normalized = employees.map(normalizeEmployee)
     await clearAllEmployees()
-    await bulkPutEmployees(employees)
-    set({ employees, past: [], future: [] })
+    await bulkPutEmployees(normalized)
+    set({ employees: normalized, past: [], future: [] })
   },
 }))

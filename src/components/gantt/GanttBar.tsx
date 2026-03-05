@@ -57,6 +57,7 @@ export function GanttBar({ bar, rowHeight }: Props) {
           'gantt-bar',
           bar.type === 'vacation' && !isDragging && !bar.color && 'gantt-bar-vacation',
           bar.type === 'nrd' && !isDragging && 'gantt-bar-nrd',
+          bar.type === 'unpaid' && !isDragging && 'gantt-bar-unpaid',
           isDragging && isValid && 'opacity-90 shadow-lg',
           isDragging && !isValid && 'gantt-bar-invalid',
           'overflow-hidden',
@@ -71,7 +72,7 @@ export function GanttBar({ bar, rowHeight }: Props) {
             ? { backgroundColor: bar.color, color: '#fff' }
             : {}),
           ...(isDragging && isValid
-            ? { backgroundColor: bar.type === 'nrd' ? '#fcd34d' : (bar.color ?? '#60a5fa') }
+            ? { backgroundColor: bar.type === 'nrd' ? '#fcd34d' : bar.type === 'unpaid' ? '#9ca3af' : (bar.color ?? '#60a5fa') }
             : {}),
         }}
         onPointerDown={(e) => {

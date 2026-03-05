@@ -9,6 +9,7 @@ interface SettingsState extends Settings {
   setRowHeight: (h: number) => void
   toggleShowWeekends: () => void
   toggleShowNRD: () => void
+  toggleShowUnpaidLeave: () => void
   applySettings: (s: Partial<Settings>) => void
 }
 
@@ -21,6 +22,7 @@ const FALLBACK: Settings = {
   rowHeight: 44,
   showWeekends: true,
   showNRD: true,
+  showUnpaidLeave: true,
 }
 
 const MIN_ROW_HEIGHT = 44
@@ -54,6 +56,7 @@ function toPlain(state: SettingsState): Settings {
     rowHeight: state.rowHeight,
     showWeekends: state.showWeekends,
     showNRD: state.showNRD,
+    showUnpaidLeave: state.showUnpaidLeave,
   }
 }
 
@@ -97,6 +100,12 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
   toggleShowNRD: () => {
     const showNRD = !get().showNRD
     set({ showNRD })
+    persist(toPlain(get()))
+  },
+
+  toggleShowUnpaidLeave: () => {
+    const showUnpaidLeave = !get().showUnpaidLeave
+    set({ showUnpaidLeave })
     persist(toPlain(get()))
   },
 

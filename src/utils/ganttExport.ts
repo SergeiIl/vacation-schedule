@@ -26,6 +26,7 @@ export interface GanttExportOptions {
   sidebarWidth: number
   showWeekends: boolean
   showNRD: boolean
+  showUnpaidLeave: boolean
 }
 
 const HEADER_H = 52
@@ -33,7 +34,7 @@ const TOP_ROW_H = 20
 const EXPORT_DPR = 2
 
 export function exportGantt(opts: GanttExportOptions, fmt: ExportFormat): void {
-  const { employees, specialDates, planningYear, scale, rowHeight, sidebarWidth, showWeekends, showNRD } = opts
+  const { employees, specialDates, planningYear, scale, rowHeight, sidebarWidth, showWeekends, showNRD, showUnpaidLeave } = opts
 
   const ppd = PIXELS_PER_DAY[scale]
   const totalDays = getTotalDays(planningYear)
@@ -196,13 +197,13 @@ export function exportGantt(opts: GanttExportOptions, fmt: ExportFormat): void {
 
   for (let i = 0; i < employees.length; i++) {
     const emp = employees[i]
-    const bars = buildBarsForEmployee(emp, planningYear, scale, showNRD, i)
+    const bars = buildBarsForEmployee(emp, planningYear, scale, showNRD, i, showUnpaidLeave)
     const barY = HEADER_H + i * rowHeight + 4
 
     for (const bar of bars) {
       const barX = sidebarWidth + bar.x
       const barW = Math.max(bar.width, 4)
-      const fillColor = bar.type === 'nrd' ? '#fcd34d' : (bar.color ?? '#60a5fa')
+      const fillColor = bar.type === 'nrd' ? '#fcd34d' : bar.type === 'unpaid' ? '#9ca3af' : (bar.color ?? '#60a5fa')
 
       ctx.fillStyle = fillColor
       roundRect(ctx, barX, barY, barW, barH, 3)
@@ -211,12 +212,12 @@ export function exportGantt(opts: GanttExportOptions, fmt: ExportFormat): void {
       const days = differenceInCalendarDays(bar.endDate, bar.startDate) + 1
       if (barW > 50) {
         const label = `${format(bar.startDate, 'd MMM', { locale: ru })} – ${format(bar.endDate, 'd MMM', { locale: ru })}`
-        ctx.fillStyle = bar.type === 'nrd' ? '#78350f' : '#ffffff'
+        ctx.fillStyle = bar.type === 'nrd' || bar.type === 'unpaid' ? '#1f2937' : '#ffffff'
         ctx.font = '10px system-ui, sans-serif'
         ctx.textAlign = 'left'
         ctx.fillText(label, barX + 6, barY + barH / 2, barW - 10)
       } else if (barW > 22) {
-        ctx.fillStyle = bar.type === 'nrd' ? '#78350f' : '#ffffff'
+        ctx.fillStyle = bar.type === 'nrd' || bar.type === 'unpaid' ? '#1f2937' : '#ffffff'
         ctx.font = '10px system-ui, sans-serif'
         ctx.textAlign = 'center'
         ctx.fillText(`${days}д`, barX + barW / 2, barY + barH / 2, barW - 4)

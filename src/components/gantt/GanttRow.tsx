@@ -10,11 +10,11 @@ interface Props {
 }
 
 export function GanttRow({ employee, rowIndex }: Props) {
-  const { scale, planningYear, rowHeight, showNRD } = useSettingsStore()
+  const { scale, planningYear, rowHeight, showNRD, showUnpaidLeave } = useSettingsStore()
 
   const bars = useMemo(
-    () => buildBarsForEmployee(employee, planningYear, scale, showNRD, rowIndex),
-    [employee, planningYear, scale, showNRD, rowIndex],
+    () => buildBarsForEmployee(employee, planningYear, scale, showNRD, rowIndex, showUnpaidLeave),
+    [employee, planningYear, scale, showNRD, showUnpaidLeave, rowIndex],
   )
 
   return (

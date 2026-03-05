@@ -52,6 +52,9 @@ export function EmployeeListItem({ employee, onEdit, style }: Props) {
           {employee.nrd.length > 0 && (
             <Badge variant="warning" className="text-[10px] px-1 py-0 flex-shrink-0">НРД</Badge>
           )}
+          {employee.unpaidLeave.length > 0 && (
+            <Badge variant="secondary" className="text-[10px] px-1 py-0 flex-shrink-0">ЗСС</Badge>
+          )}
         </div>
       </div>
       <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">

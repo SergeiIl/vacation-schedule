@@ -13,7 +13,7 @@ import { Input } from '@/components/ui/Input'
 import { Label } from '@/components/ui/Label'
 import { useEmployeeStore } from '@/store'
 import { useSpecialDateStore } from '@/store'
-import type { Employee, VacationInterval, NRD } from '@/types/employee'
+import type { Employee, VacationInterval, NRD, UnpaidLeave } from '@/types/employee'
 import {
   validateVacationInterval,
   validateNoSelfOverlap,
@@ -70,6 +70,9 @@ export function AddEmployeeModal({ employee, onClose }: Props) {
   const [nrds, setNRDs] = useState<FormVacation[]>(
     employee?.nrd.map((n) => ({ id: n.id, start: n.start, end: n.end })) ?? [],
   )
+  const [unpaidLeaves, setUnpaidLeaves] = useState<FormVacation[]>(
+    (employee?.unpaidLeave ?? []).map((u) => ({ id: u.id, start: u.start, end: u.end })),
+  )
   const [globalError, setGlobalError] = useState('')
 
   const addNrd = () => {
@@ -83,6 +86,20 @@ export function AddEmployeeModal({ employee, onClose }: Props) {
   const updateNrdField = (id: string, field: 'start' | 'end', value: string) => {
     setNRDs((prev) =>
       prev.map((n) => (n.id !== id ? n : { ...n, [field]: value })),
+    )
+  }
+
+  const addUnpaidLeave = () => {
+    setUnpaidLeaves((prev) => [...prev, { id: nanoid(), start: today, end: today }])
+  }
+
+  const removeUnpaidLeave = (id: string) => {
+    setUnpaidLeaves((prev) => prev.filter((u) => u.id !== id))
+  }
+
+  const updateUnpaidLeaveField = (id: string, field: 'start' | 'end', value: string) => {
+    setUnpaidLeaves((prev) =>
+      prev.map((u) => (u.id !== id ? u : { ...u, [field]: value })),
     )
   }
 
@@ -183,12 +200,19 @@ export function AddEmployeeModal({ employee, onClose }: Props) {
       end: n.end,
     }))
 
+    const unpaidLeaveIntervals: UnpaidLeave[] = unpaidLeaves.map((u) => ({
+      id: u.id,
+      start: u.start,
+      end: u.end,
+    }))
+
     if (employee) {
       updateEmployee(employee.id, {
         fullName: fullName.trim(),
         position: position.trim() || undefined,
         vacations: vacationIntervals,
         nrd: nrdIntervals,
+        unpaidLeave: unpaidLeaveIntervals,
         color,
       })
     } else {
@@ -197,6 +221,7 @@ export function AddEmployeeModal({ employee, onClose }: Props) {
         position: position.trim() || undefined,
         vacations: vacationIntervals,
         nrd: nrdIntervals,
+        unpaidLeave: unpaidLeaveIntervals,
         color,
       })
     }
@@ -376,6 +401,53 @@ export function AddEmployeeModal({ employee, onClose }: Props) {
                     size="icon"
                     className="h-8 w-8 text-destructive hover:text-destructive flex-shrink-0"
                     onClick={() => removeNrd(n.id)}
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Отпуск за свой счёт */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <Label>Отпуск за свой счёт</Label>
+              <Button variant="outline" size="sm" onClick={addUnpaidLeave}>
+                <Plus className="h-3.5 w-3.5 mr-1" />
+                Добавить
+              </Button>
+            </div>
+
+            {unpaidLeaves.length === 0 && (
+              <p className="text-sm text-muted-foreground">
+                Нет периодов. Нажмите «Добавить».
+              </p>
+            )}
+
+            {unpaidLeaves.map((u, i) => (
+              <div key={u.id} className="flex items-center gap-2">
+                <span className="text-xs text-muted-foreground w-4">{i + 1}.</span>
+                <div className="flex-1 flex items-center gap-2">
+                  <Input
+                    type="date"
+                    value={u.start}
+                    onChange={(e) => updateUnpaidLeaveField(u.id, 'start', e.target.value)}
+                    className="flex-1"
+                  />
+                  <span className="text-muted-foreground text-sm">–</span>
+                  <Input
+                    type="date"
+                    value={u.end}
+                    min={u.start}
+                    onChange={(e) => updateUnpaidLeaveField(u.id, 'end', e.target.value)}
+                    className="flex-1"
+                  />
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 text-destructive hover:text-destructive flex-shrink-0"
+                    onClick={() => removeUnpaidLeave(u.id)}
                   >
                     <Trash2 className="h-3.5 w-3.5" />
                   </Button>

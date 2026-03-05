@@ -20,11 +20,13 @@ export function SettingsPanel() {
     rowHeight,
     showWeekends,
     showNRD,
+    showUnpaidLeave,
     setScale,
     setYear,
     setRowHeight,
     toggleShowWeekends,
     toggleShowNRD,
+    toggleShowUnpaidLeave,
   } = useSettingsStore()
 
   const { employees } = useEmployeeStore()
@@ -39,6 +41,7 @@ export function SettingsPanel() {
       name: emp.fullName,
       vacDays: emp.vacations.reduce((s, v) => s + intervalDays(v.start, v.end), 0),
       nrdDays: emp.nrd.reduce((s, n) => s + intervalDays(n.start, n.end), 0),
+      unpaidDays: emp.unpaidLeave.reduce((s, u) => s + intervalDays(u.start, u.end), 0),
     }))
     .sort((a, b) => b.vacDays - a.vacDays)
 
@@ -111,6 +114,10 @@ export function SettingsPanel() {
           <Label htmlFor="showNRD" className="font-normal">Показывать НРД</Label>
           <Switch id="showNRD" checked={showNRD} onCheckedChange={toggleShowNRD} />
         </div>
+        <div className="flex items-center justify-between">
+          <Label htmlFor="showUnpaidLeave" className="font-normal">Показывать отпуска за свой счёт</Label>
+          <Switch id="showUnpaidLeave" checked={showUnpaidLeave} onCheckedChange={toggleShowUnpaidLeave} />
+        </div>
       </section>
 
       {/* Reports */}
@@ -132,6 +139,7 @@ export function SettingsPanel() {
                 <th className="text-left px-2 py-1.5 font-medium">ФИО</th>
                 <th className="text-right px-2 py-1.5 font-medium">Отпуск</th>
                 <th className="text-right px-2 py-1.5 font-medium">НРД</th>
+                <th className="text-right px-2 py-1.5 font-medium">ЗСС</th>
                 <th className="text-right px-2 py-1.5 font-medium">Итого</th>
               </tr>
             </thead>
@@ -145,14 +153,17 @@ export function SettingsPanel() {
                   <td className="px-2 py-1 text-right text-muted-foreground">
                     {row.nrdDays || '–'}
                   </td>
+                  <td className="px-2 py-1 text-right text-muted-foreground">
+                    {row.unpaidDays || '–'}
+                  </td>
                   <td className="px-2 py-1 text-right font-medium">
-                    {row.vacDays + row.nrdDays}
+                    {row.vacDays + row.nrdDays + row.unpaidDays}
                   </td>
                 </tr>
               ))}
               {employees.length === 0 && (
                 <tr>
-                  <td colSpan={4} className="px-2 py-3 text-center text-muted-foreground">
+                  <td colSpan={5} className="px-2 py-3 text-center text-muted-foreground">
                     Нет данных
                   </td>
                 </tr>

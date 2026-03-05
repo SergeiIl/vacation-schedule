@@ -8,4 +8,5 @@ export interface Settings {
   rowHeight: number
   showWeekends: boolean
   showNRD: boolean
+  showUnpaidLeave: boolean
 }

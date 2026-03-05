@@ -2,8 +2,8 @@ export type DragMode = 'move' | 'resize-left' | 'resize-right'
 
 export interface GanttBar {
   employeeId: string
-  vacationId: string // 'nrd' for NRD bars
-  type: 'vacation' | 'nrd'
+  vacationId: string
+  type: 'vacation' | 'nrd' | 'unpaid'
   startDate: Date
   endDate: Date
   x: number
@@ -15,7 +15,7 @@ export interface GanttBar {
 export interface DragState {
   active: boolean
   barId: string // `${employeeId}:${vacationId}`
-  barType: 'vacation' | 'nrd'
+  barType: 'vacation' | 'nrd' | 'unpaid'
   mode: DragMode
   originX: number
   originStartDate: Date
