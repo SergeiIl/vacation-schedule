@@ -191,7 +191,7 @@ export function GanttChart() {
     if (node) setContainerHeight(node.clientHeight - HEADER_HEIGHT)
   }, [])
 
-  const { visibleItems, offsetTop, offsetBottom, startIndex } = useVirtualRows(
+const { visibleItems, offsetTop, offsetBottom, startIndex } = useVirtualRows(
     employees,
     rowHeight,
     containerHeight,

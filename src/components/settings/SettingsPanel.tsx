@@ -1,11 +1,11 @@
-import { Sun, Moon, Monitor, BarChart3 } from 'lucide-react'
+import { BarChart3 } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Label } from '@/components/ui/Label'
 import { Switch } from '@/components/ui/Switch'
 import { useSettingsStore } from '@/store'
 import { useEmployeeStore } from '@/store'
 import { intervalDays } from '@/utils/dateUtils'
-import type { Scale, Theme } from '@/types/settings'
+import type { Scale } from '@/types/settings'
 
 const SCALES: { value: Scale; label: string }[] = [
   { value: 'day', label: 'День' },
@@ -13,23 +13,15 @@ const SCALES: { value: Scale; label: string }[] = [
   { value: 'month', label: 'Месяц' },
 ]
 
-const THEMES: { value: Theme; icon: React.ReactNode; label: string }[] = [
-  { value: 'light', icon: <Sun className="h-4 w-4" />, label: 'Светлая' },
-  { value: 'dark', icon: <Moon className="h-4 w-4" />, label: 'Тёмная' },
-  { value: 'system', icon: <Monitor className="h-4 w-4" />, label: 'Система' },
-]
-
 export function SettingsPanel() {
   const {
     scale,
     planningYear,
-    theme,
     rowHeight,
     showWeekends,
     showNRD,
     setScale,
     setYear,
-    setTheme,
     setRowHeight,
     toggleShowWeekends,
     toggleShowNRD,
@@ -91,25 +83,6 @@ export function SettingsPanel() {
           >
             +
           </Button>
-        </div>
-      </section>
-
-      {/* Theme */}
-      <section className="space-y-2">
-        <Label className="text-sm font-semibold">Тема</Label>
-        <div className="flex gap-1">
-          {THEMES.map((t) => (
-            <Button
-              key={t.value}
-              variant={theme === t.value ? 'default' : 'outline'}
-              size="sm"
-              className="flex-1 gap-1"
-              onClick={() => setTheme(t.value)}
-            >
-              {t.icon}
-              {t.label}
-            </Button>
-          ))}
         </div>
       </section>
 
