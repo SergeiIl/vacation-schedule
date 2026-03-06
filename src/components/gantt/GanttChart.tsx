@@ -5,6 +5,7 @@ import { GanttGrid } from './GanttGrid'
 import { GanttRow } from './GanttRow'
 import { GanttFooter, FOOTER_HEIGHT } from './GanttFooter'
 import { DnDHandler } from './DnDHandler'
+import { BarContextMenuProvider } from './BarContextMenu'
 import { useEmployeeStore, useSpecialDateStore, useSettingsStore } from '@/store'
 import { useVirtualRows } from '@/hooks/useVirtualRows'
 import { chartWidth, dateToPixel, getChartStartDate, PIXELS_PER_DAY } from '@/utils/dateUtils'
@@ -216,6 +217,7 @@ const { visibleItems, offsetTop, offsetBottom, startIndex } = useVirtualRows(
   }
 
   return (
+    <BarContextMenuProvider>
     <DnDHandler>
       <div className="flex flex-col h-full overflow-hidden border border-border rounded-md">
         {/* Main scrollable area */}
@@ -345,5 +347,6 @@ const { visibleItems, offsetTop, offsetBottom, startIndex } = useVirtualRows(
         </div>
       )}
     </DnDHandler>
+    </BarContextMenuProvider>
   )
 }

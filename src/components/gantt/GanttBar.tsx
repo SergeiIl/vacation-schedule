@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import { format } from 'date-fns'
 import { useDragContext } from './DnDHandler'
+import { useBarContextMenu } from './BarContextMenuContext'
 import { GanttTooltip } from './GanttTooltip'
 import { computeDragPreview } from '@/utils/ganttLayout'
 import { intervalDays } from '@/utils/dateUtils'
@@ -16,6 +17,7 @@ interface Props {
 
 export function GanttBar({ bar, rowHeight, allBars }: Props) {
   const { dragState, startDrag } = useDragContext()
+  const { openMenu } = useBarContextMenu()
   const { scale, planningYear } = useSettingsStore()
   const leftHandleRef = useRef<HTMLDivElement>(null)
   const rightHandleRef = useRef<HTMLDivElement>(null)
@@ -91,6 +93,11 @@ export function GanttBar({ bar, rowHeight, allBars }: Props) {
             e.target === rightHandleRef.current
           ) return
           startDrag(bar, 'move', e)
+        }}
+        onContextMenu={(e) => {
+          e.preventDefault()
+          e.stopPropagation()
+          openMenu(barId, bar.type, e.clientX, e.clientY)
         }}
         onMouseEnter={(e) => setTooltipPos({ x: e.clientX, y: e.clientY })}
         onMouseMove={(e) => setTooltipPos({ x: e.clientX, y: e.clientY })}
