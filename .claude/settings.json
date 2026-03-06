@@ -3,7 +3,8 @@
     "allow": [
       "Bash(npm install class-variance-authority clsx tailwind-merge lucide-react @radix-ui/react-dialog @radix-ui/react-slot @radix-ui/react-label @radix-ui/react-tabs @radix-ui/react-scroll-area @radix-ui/react-toast @radix-ui/react-dropdown-menu @radix-ui/react-popover @radix-ui/react-select @radix-ui/react-switch @radix-ui/react-tooltip react-day-picker date-fns)",
       "Bash(npm run build)",
-      "Bash(/Users/ilsa/work/vacation-schedule/index.html:*)"
+      "Bash(/Users/ilsa/work/vacation-schedule/index.html:*)",
+      "Bash(git add src/utils/russianHolidays.ts src/components/specialDates/SpecialDatesEditor.tsx src/components/gantt/GanttGrid.tsx src/utils/ganttExport.ts src/components/layout/Header.tsx)"
     ]
   }
 }
