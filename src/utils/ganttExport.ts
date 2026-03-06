@@ -1,5 +1,4 @@
 import { addDays, isWeekend, format, differenceInCalendarDays, getDaysInMonth, addMonths } from 'date-fns'
-import { ru } from 'date-fns/locale'
 import type { Employee } from '@/types/employee'
 import type { SpecialDate } from '@/types/specialDate'
 import type { Scale } from '@/types/settings'
@@ -211,17 +210,29 @@ export function exportGantt(opts: GanttExportOptions, fmt: ExportFormat): void {
       ctx.fill()
 
       const days = differenceInCalendarDays(bar.endDate, bar.startDate) + 1
-      if (barW > 50) {
-        const label = `${format(bar.startDate, 'd MMM', { locale: ru })} – ${format(bar.endDate, 'd MMM', { locale: ru })}`
-        ctx.fillStyle = bar.type === 'nrd' || bar.type === 'unpaid' ? '#1f2937' : '#ffffff'
-        ctx.font = '10px system-ui, sans-serif'
-        ctx.textAlign = 'left'
-        ctx.fillText(label, barX + 6, barY + barH / 2, barW - 10)
-      } else if (barW > 22) {
-        ctx.fillStyle = bar.type === 'nrd' || bar.type === 'unpaid' ? '#1f2937' : '#ffffff'
+      const isNrdOrUnpaid = bar.type === 'nrd' || bar.type === 'unpaid'
+
+      // Inside label: days count (matches live UI)
+      if (barW > 20) {
+        ctx.fillStyle = isNrdOrUnpaid ? '#1f2937' : '#ffffff'
         ctx.font = '10px system-ui, sans-serif'
         ctx.textAlign = 'center'
         ctx.fillText(`${days}д`, barX + barW / 2, barY + barH / 2, barW - 4)
+      }
+
+      // Outside label: date range in dd.MM format (matches live UI)
+      const dateLabel = `${format(bar.startDate, 'dd.MM')}-${format(bar.endDate, 'dd.MM')}`
+      ctx.font = '10px system-ui, sans-serif'
+      const textWidth = ctx.measureText(dateLabel).width + 8
+      const rightEdge = barX + barW
+      if (rightEdge + textWidth <= canvasW) {
+        ctx.fillStyle = '#4b5563'
+        ctx.textAlign = 'left'
+        ctx.fillText(dateLabel, rightEdge + 4, barY + barH / 2)
+      } else if (barX - textWidth >= sidebarWidth) {
+        ctx.fillStyle = '#4b5563'
+        ctx.textAlign = 'right'
+        ctx.fillText(dateLabel, barX - 4, barY + barH / 2)
       }
     }
   }
