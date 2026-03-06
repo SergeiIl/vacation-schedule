@@ -155,16 +155,20 @@ export function GanttChart() {
     window.addEventListener('pointerup', onUp)
   }, [rowHeight, reorderEmployees])
 
-  // Scroll to today on mount
+  // Scroll to today; fires again when employees first load (chartScrollRef is null until then)
   useEffect(() => {
+    if (employees.length === 0) return
     const today = new Date()
     if (today.getFullYear() !== planningYear) return
     const chartStart = getChartStartDate(planningYear)
     const ppd = PIXELS_PER_DAY[scale]
     const todayX = dateToPixel(today, chartStart, ppd)
     const offset = Math.max(0, todayX - 300)
-    chartScrollRef.current?.scrollTo({ left: offset, behavior: 'smooth' })
-  }, [planningYear, scale])
+    const tid = setTimeout(() => {
+      if (chartScrollRef.current) chartScrollRef.current.scrollLeft = offset
+    }, 0)
+    return () => clearTimeout(tid)
+  }, [planningYear, scale, employees.length])
 
   const handleChartScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
     const el = e.currentTarget
