@@ -115,7 +115,7 @@ export function SpecialDatesEditor() {
     const existingStarts = new Set(holidays.map((h) => h.start))
     for (const h of preset) {
       if (!existingStarts.has(h.start)) {
-        addSpecialDate({ type: 'holiday', name: h.name, start: h.start, end: h.end })
+        addSpecialDate({ type: 'holiday', name: h.name, start: h.start, end: h.end, isStatutory: !!h.isBase })
       }
     }
   }

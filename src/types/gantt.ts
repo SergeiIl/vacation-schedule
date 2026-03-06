@@ -5,9 +5,11 @@ export interface GanttBar {
   vacationId: string
   type: 'vacation' | 'nrd' | 'unpaid'
   startDate: Date
-  endDate: Date
+  endDate: Date           // stored end (used for drag/resize)
+  effectiveEndDate: Date  // visual end (extended past holidays)
   x: number
-  width: number
+  width: number           // effective width (including holiday extension)
+  storedWidth: number     // width up to stored end (without extension)
   rowIndex: number
   color?: string // custom hex color (vacation bars only)
 }

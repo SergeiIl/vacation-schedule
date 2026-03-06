@@ -216,7 +216,7 @@ export function exportGantt(opts: GanttExportOptions, fmt: ExportFormat): void {
 
   for (let i = 0; i < employees.length; i++) {
     const emp = employees[i]
-    const bars = buildBarsForEmployee(emp, planningYear, scale, showNRD, i, showUnpaidLeave)
+    const bars = buildBarsForEmployee(emp, planningYear, scale, showNRD, i, showUnpaidLeave, specialDates)
     const barY = HEADER_H + i * rowHeight + 4
 
     for (const bar of bars) {

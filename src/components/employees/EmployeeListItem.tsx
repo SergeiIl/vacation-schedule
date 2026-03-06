@@ -14,7 +14,7 @@ import { useEmployeeStore } from '@/store'
 import { useSpecialDateStore } from '@/store'
 import { useSettingsStore } from '@/store'
 import type { Employee } from '@/types/employee'
-import { intervalDays } from '@/utils/dateUtils'
+import { collectHolidayDates, vacationDaysUsed } from '@/utils/dateUtils'
 import { checkConflicts } from '@/utils/validation'
 import { cn } from '@/lib/utils'
 
@@ -34,7 +34,8 @@ export function EmployeeListItem({ employee, onEdit, style }: Props) {
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [skipNextTime, setSkipNextTime] = useState(false)
 
-  const totalVacDays = employee.vacations.reduce((sum, v) => sum + intervalDays(v.start, v.end), 0)
+  const holidayDates = collectHolidayDates(specialDates, true) // только законные праздники по ст. 112 ТК РФ
+  const totalVacDays = employee.vacations.reduce((sum, v) => sum + vacationDaysUsed(v.start, v.end, holidayDates), 0)
   const hasConflict = checkConflicts(employee.vacations, specialDates)
   const norm = employee.vacationDaysOverride ?? vacationDaysNorm
   const remaining = norm - totalVacDays

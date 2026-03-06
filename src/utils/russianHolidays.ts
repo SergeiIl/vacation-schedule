@@ -2,6 +2,7 @@ export interface RussianHoliday {
   name: string
   start: string // YYYY-MM-DD
   end: string   // YYYY-MM-DD
+  isBase?: boolean // нерабочий праздничный день по ст. 112 ТК РФ (продлевает отпуск)
 }
 
 function d(year: number, month: number, day: number): string {
@@ -23,13 +24,13 @@ function extra(year: number, month: number, day: number, label: string): Russian
  */
 export function getRussianHolidays(year: number): RussianHoliday[] {
   const base: RussianHoliday[] = [
-    { name: 'Новогодние каникулы / Рождество', start: d(year, 1, 1), end: d(year, 1, 8) },
-    { name: 'День защитника Отечества',        start: d(year, 2, 23), end: d(year, 2, 23) },
-    { name: 'Международный женский день',       start: d(year, 3, 8),  end: d(year, 3, 8) },
-    { name: 'Праздник весны и труда',           start: d(year, 5, 1),  end: d(year, 5, 1) },
-    { name: 'День Победы',                      start: d(year, 5, 9),  end: d(year, 5, 9) },
-    { name: 'День России',                      start: d(year, 6, 12), end: d(year, 6, 12) },
-    { name: 'День народного единства',          start: d(year, 11, 4), end: d(year, 11, 4) },
+    { name: 'Новогодние каникулы / Рождество', start: d(year, 1, 1), end: d(year, 1, 8),  isBase: true },
+    { name: 'День защитника Отечества',        start: d(year, 2, 23), end: d(year, 2, 23), isBase: true },
+    { name: 'Международный женский день',       start: d(year, 3, 8),  end: d(year, 3, 8),  isBase: true },
+    { name: 'Праздник весны и труда',           start: d(year, 5, 1),  end: d(year, 5, 1),  isBase: true },
+    { name: 'День Победы',                      start: d(year, 5, 9),  end: d(year, 5, 9),  isBase: true },
+    { name: 'День России',                      start: d(year, 6, 12), end: d(year, 6, 12), isBase: true },
+    { name: 'День народного единства',          start: d(year, 11, 4), end: d(year, 11, 4), isBase: true },
   ]
   return [...base, ...getAnnualTransfers(year)]
 }

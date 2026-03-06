@@ -36,7 +36,7 @@ export function GanttBar({ bar, rowHeight, allBars }: Props) {
   let displayX = bar.x
   let displayWidth = bar.width
   let displayStart = bar.startDate
-  let displayEnd = bar.endDate
+  let displayEnd = bar.effectiveEndDate
   let isValid = true
 
   if (isDragging && dragState) {
@@ -122,6 +122,19 @@ export function GanttBar({ bar, rowHeight, allBars }: Props) {
             startDrag(bar, 'resize-left', e)
           }}
         />
+
+        {/* Holiday extension zone — striped overlay on the bonus days */}
+        {!isDragging && bar.storedWidth < bar.width && (
+          <div
+            className="absolute top-0 bottom-0 pointer-events-none"
+            style={{
+              left: bar.storedWidth,
+              right: 0,
+              backgroundImage:
+                'repeating-linear-gradient(45deg, transparent, transparent 3px, rgba(255,255,255,0.35) 3px, rgba(255,255,255,0.35) 6px)',
+            }}
+          />
+        )}
 
         {insideLabel && (
           <span className="absolute inset-0 z-[2] text-xs pointer-events-none select-none flex items-center justify-center">

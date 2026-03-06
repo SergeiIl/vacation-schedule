@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { GanttBar } from './GanttBar'
 import { buildBarsForEmployee } from '@/utils/ganttLayout'
 import { useSettingsStore } from '@/store'
+import { useSpecialDateStore } from '@/store'
 import type { Employee } from '@/types/employee'
 
 interface Props {
@@ -11,10 +12,11 @@ interface Props {
 
 export function GanttRow({ employee, rowIndex }: Props) {
   const { scale, planningYear, rowHeight, showNRD, showUnpaidLeave } = useSettingsStore()
+  const { specialDates } = useSpecialDateStore()
 
   const bars = useMemo(
-    () => buildBarsForEmployee(employee, planningYear, scale, showNRD, rowIndex, showUnpaidLeave),
-    [employee, planningYear, scale, showNRD, showUnpaidLeave, rowIndex],
+    () => buildBarsForEmployee(employee, planningYear, scale, showNRD, rowIndex, showUnpaidLeave, specialDates),
+    [employee, planningYear, scale, showNRD, showUnpaidLeave, rowIndex, specialDates],
   )
 
   return (

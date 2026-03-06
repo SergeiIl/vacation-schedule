@@ -5,7 +5,8 @@ import { Label } from '@/components/ui/Label'
 import { Switch } from '@/components/ui/Switch'
 import { useSettingsStore } from '@/store'
 import { useEmployeeStore } from '@/store'
-import { intervalDays } from '@/utils/dateUtils'
+import { useSpecialDateStore } from '@/store'
+import { intervalDays, collectHolidayDates, vacationDaysUsed } from '@/utils/dateUtils'
 import type { Scale } from '@/types/settings'
 
 const SCALES: { value: Scale; label: string }[] = [
@@ -42,15 +43,17 @@ export function SettingsPanel() {
   const [normInput, setNormInput] = useState(String(vacationDaysNorm))
 
   const { employees } = useEmployeeStore()
+  const { specialDates } = useSpecialDateStore()
+  const holidayDates = collectHolidayDates(specialDates, true) // только законные праздники по ст. 112 ТК РФ
 
   const totalVacDays = employees.reduce(
-    (sum, emp) => sum + emp.vacations.reduce((s, v) => s + intervalDays(v.start, v.end), 0),
+    (sum, emp) => sum + emp.vacations.reduce((s, v) => s + vacationDaysUsed(v.start, v.end, holidayDates), 0),
     0,
   )
 
   const statsRows = [...employees]
     .map((emp) => {
-      const vacDays = emp.vacations.reduce((s, v) => s + intervalDays(v.start, v.end), 0)
+      const vacDays = emp.vacations.reduce((s, v) => s + vacationDaysUsed(v.start, v.end, holidayDates), 0)
       const norm = emp.vacationDaysOverride ?? vacationDaysNorm
       return {
         name: emp.fullName,

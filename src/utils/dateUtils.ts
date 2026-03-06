@@ -53,6 +53,48 @@ export function intervalDays(start: string, end: string): number {
   return differenceInCalendarDays(parseISO(end), parseISO(start)) + 1
 }
 
+// statutoryOnly=true — только нерабочие праздничные дни по ст. 112 ТК РФ (продлевают отпуск)
+export function collectHolidayDates(specialDates: SpecialDate[], statutoryOnly = false): Set<string> {
+  const set = new Set<string>()
+  for (const sd of specialDates) {
+    if (sd.type !== 'holiday') continue
+    if (statutoryOnly && !sd.isStatutory) continue
+    const start = parseISO(sd.start)
+    const end = sd.end ? parseISO(sd.end) : start
+    const days = differenceInCalendarDays(end, start) + 1
+    for (let i = 0; i < days; i++) {
+      set.add(format(addDays(start, i), 'yyyy-MM-dd'))
+    }
+  }
+  return set
+}
+
+// Extends vacation end date past any holidays that fall within [start, end].
+// E.g. if vacation is Mar 6–10 and Mar 8 is a holiday, returns Mar 11.
+export function effectiveVacationEnd(start: string, end: string, holidayDates: Set<string>): string {
+  const startDate = parseISO(start)
+  let curEnd = parseISO(end)
+  let i = 0
+  while (i <= differenceInCalendarDays(curEnd, startDate)) {
+    if (holidayDates.has(format(addDays(startDate, i), 'yyyy-MM-dd'))) {
+      curEnd = addDays(curEnd, 1)
+    }
+    i++
+  }
+  return format(curEnd, 'yyyy-MM-dd')
+}
+
+// Calendar days of vacation that count against the norm (total – holidays in [start, end]).
+export function vacationDaysUsed(start: string, end: string, holidayDates: Set<string>): number {
+  const total = intervalDays(start, end)
+  let holidays = 0
+  const startDate = parseISO(start)
+  for (let i = 0; i < total; i++) {
+    if (holidayDates.has(format(addDays(startDate, i), 'yyyy-MM-dd'))) holidays++
+  }
+  return total - holidays
+}
+
 export function snapToScale(date: Date, scale: Scale): Date {
   if (scale === 'week') {
     return startOfWeek(date, { weekStartsOn: 1 })
