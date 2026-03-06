@@ -2,9 +2,11 @@ import { useEffect } from 'react'
 import { nanoid } from 'nanoid'
 import { AppShell } from '@/components/layout/AppShell'
 import { useEmployeeStore, useSpecialDateStore, useSettingsStore, applyThemeToDOM } from '@/store'
-import { getAllEmployees, getAllSpecialDates, getSettings } from '@/db/indexedDB'
+import { getAllEmployees, getAllSpecialDates, getSettings, putSpecialDate } from '@/db/indexedDB'
 import { useVacationRuleCheck } from '@/hooks/useVacationRuleCheck'
 import type { Employee } from '@/types/employee'
+import type { SpecialDate } from '@/types/specialDate'
+import { getRussianHolidays } from '@/utils/russianHolidays'
 
 function migrateEmployee(raw: unknown): Employee {
   const e = raw as Record<string, unknown>
@@ -38,7 +40,24 @@ export default function App() {
           getSettings(),
         ])
         setEmployees(employees.map(migrateEmployee))
-        setSpecialDates(specialDates)
+        const year = settings?.planningYear ?? new Date().getFullYear()
+        let effectiveSpecialDates = specialDates
+        if (specialDates.length === 0) {
+          effectiveSpecialDates = getRussianHolidays(year).map(
+            (h): SpecialDate => ({
+              id: nanoid(),
+              name: h.name,
+              type: 'holiday',
+              start: h.start,
+              end: h.end !== h.start ? h.end : null,
+              isStatutory: h.isBase ?? false,
+            }),
+          )
+          for (const sd of effectiveSpecialDates) {
+            await putSpecialDate(sd)
+          }
+        }
+        setSpecialDates(effectiveSpecialDates)
         if (settings) {
           applySettings(settings)
         }

@@ -1,7 +1,14 @@
-import { addDays, isWeekend, format, differenceInCalendarDays, getDaysInMonth, addMonths } from 'date-fns'
+import {
+  addDays,
+  isWeekend,
+  format,
+  differenceInCalendarDays,
+  getDaysInMonth,
+  addMonths,
+} from 'date-fns'
 import type { Employee } from '@/types/employee'
 import type { SpecialDate } from '@/types/specialDate'
-import type { Scale } from '@/types/settings'
+import { SCALES, type Scale } from '@/types/settings'
 import {
   PIXELS_PER_DAY,
   getChartStartDate,
@@ -35,7 +42,18 @@ const TOP_ROW_H = 20
 const EXPORT_DPR = 2
 
 export function exportGantt(opts: GanttExportOptions, fmt: ExportFormat): void {
-  const { employees, specialDates, planningYear, scale, rowHeight, sidebarWidth, showWeekends, showNRD, showUnpaidLeave, maxConcurrentVacations } = opts
+  const {
+    employees,
+    specialDates,
+    planningYear,
+    scale,
+    rowHeight,
+    sidebarWidth,
+    showWeekends,
+    showNRD,
+    showUnpaidLeave,
+    maxConcurrentVacations,
+  } = opts
 
   const ppd = PIXELS_PER_DAY[scale]
   const totalDays = getTotalDays(planningYear)
@@ -79,9 +97,18 @@ export function exportGantt(opts: GanttExportOptions, fmt: ExportFormat): void {
   const hCtx = hatchCanvas.getContext('2d')!
   hCtx.strokeStyle = 'rgba(239,68,68,0.25)'
   hCtx.lineWidth = 1
-  hCtx.beginPath(); hCtx.moveTo(0, 10); hCtx.lineTo(10, 0); hCtx.stroke()
-  hCtx.beginPath(); hCtx.moveTo(-5, 10); hCtx.lineTo(5, 0); hCtx.stroke()
-  hCtx.beginPath(); hCtx.moveTo(5, 10); hCtx.lineTo(15, 0); hCtx.stroke()
+  hCtx.beginPath()
+  hCtx.moveTo(0, 10)
+  hCtx.lineTo(10, 0)
+  hCtx.stroke()
+  hCtx.beginPath()
+  hCtx.moveTo(-5, 10)
+  hCtx.lineTo(5, 0)
+  hCtx.stroke()
+  hCtx.beginPath()
+  hCtx.moveTo(5, 10)
+  hCtx.lineTo(15, 0)
+  hCtx.stroke()
   const hatchPattern = ctx.createPattern(hatchCanvas, 'repeat')!
 
   for (let i = 0; i < totalDays; i++) {
@@ -106,8 +133,14 @@ export function exportGantt(opts: GanttExportOptions, fmt: ExportFormat): void {
     const dayCounts = new Array(totalDays).fill(0)
     for (const emp of employees) {
       for (const vac of emp.vacations) {
-        const startDay = Math.max(0, differenceInCalendarDays(new Date(vac.start), chartStart))
-        const endDay = Math.min(totalDays - 1, differenceInCalendarDays(new Date(vac.end), chartStart))
+        const startDay = Math.max(
+          0,
+          differenceInCalendarDays(new Date(vac.start), chartStart),
+        )
+        const endDay = Math.min(
+          totalDays - 1,
+          differenceInCalendarDays(new Date(vac.end), chartStart),
+        )
         for (let d = startDay; d <= endDay; d++) dayCounts[d]++
       }
     }
@@ -124,7 +157,10 @@ export function exportGantt(opts: GanttExportOptions, fmt: ExportFormat): void {
   ctx.lineWidth = 1
   for (let i = 1; i < employees.length; i++) {
     const y = HEADER_H + i * rowHeight
-    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvasW, y); ctx.stroke()
+    ctx.beginPath()
+    ctx.moveTo(0, y)
+    ctx.lineTo(canvasW, y)
+    ctx.stroke()
   }
 
   // ── Today line ───────────────────────────────────────────────────────────────
@@ -134,14 +170,20 @@ export function exportGantt(opts: GanttExportOptions, fmt: ExportFormat): void {
     ctx.strokeStyle = 'rgba(239,68,68,0.7)'
     ctx.lineWidth = 1.5
     ctx.setLineDash([4, 2])
-    ctx.beginPath(); ctx.moveTo(todayX, HEADER_H); ctx.lineTo(todayX, canvasH); ctx.stroke()
+    ctx.beginPath()
+    ctx.moveTo(todayX, HEADER_H)
+    ctx.lineTo(todayX, canvasH)
+    ctx.stroke()
     ctx.setLineDash([])
   }
 
   // ── Header top divider ────────────────────────────────────────────────────────
   ctx.strokeStyle = 'rgba(0,0,0,0.10)'
   ctx.lineWidth = 0.5
-  ctx.beginPath(); ctx.moveTo(sidebarWidth, TOP_ROW_H); ctx.lineTo(canvasW, TOP_ROW_H); ctx.stroke()
+  ctx.beginPath()
+  ctx.moveTo(sidebarWidth, TOP_ROW_H)
+  ctx.lineTo(canvasW, TOP_ROW_H)
+  ctx.stroke()
 
   // ── Header cell labels ────────────────────────────────────────────────────────
   const topCells = buildTopHeaderCells(planningYear, scale)
@@ -154,12 +196,20 @@ export function exportGantt(opts: GanttExportOptions, fmt: ExportFormat): void {
     const x = sidebarWidth + cell.x
     ctx.strokeStyle = 'rgba(0,0,0,0.08)'
     ctx.lineWidth = 0.5
-    ctx.beginPath(); ctx.moveTo(x + cell.width, 0); ctx.lineTo(x + cell.width, TOP_ROW_H); ctx.stroke()
+    ctx.beginPath()
+    ctx.moveTo(x + cell.width, 0)
+    ctx.lineTo(x + cell.width, TOP_ROW_H)
+    ctx.stroke()
     if (cell.width >= 20) {
       ctx.fillStyle = '#4b5563'
       ctx.font = 'bold 11px system-ui, sans-serif'
       ctx.textAlign = 'center'
-      ctx.fillText(cell.label, x + cell.width / 2, TOP_ROW_H / 2, cell.width - 4)
+      ctx.fillText(
+        cell.label,
+        x + cell.width / 2,
+        TOP_ROW_H / 2,
+        cell.width - 4,
+      )
     }
   }
 
@@ -168,12 +218,20 @@ export function exportGantt(opts: GanttExportOptions, fmt: ExportFormat): void {
     const x = sidebarWidth + cell.x
     ctx.strokeStyle = 'rgba(0,0,0,0.06)'
     ctx.lineWidth = 0.5
-    ctx.beginPath(); ctx.moveTo(x + cell.width, TOP_ROW_H); ctx.lineTo(x + cell.width, HEADER_H); ctx.stroke()
+    ctx.beginPath()
+    ctx.moveTo(x + cell.width, TOP_ROW_H)
+    ctx.lineTo(x + cell.width, HEADER_H)
+    ctx.stroke()
     if (cell.width >= 14) {
       ctx.fillStyle = '#6b7280'
       ctx.font = '10px system-ui, sans-serif'
       ctx.textAlign = 'center'
-      ctx.fillText(cell.label, x + cell.width / 2, TOP_ROW_H + (HEADER_H - TOP_ROW_H) / 2, cell.width - 2)
+      ctx.fillText(
+        cell.label,
+        x + cell.width / 2,
+        TOP_ROW_H + (HEADER_H - TOP_ROW_H) / 2,
+        cell.width - 2,
+      )
     }
   }
 
@@ -186,7 +244,10 @@ export function exportGantt(opts: GanttExportOptions, fmt: ExportFormat): void {
   // ── Header bottom border ─────────────────────────────────────────────────────
   ctx.strokeStyle = 'rgba(0,0,0,0.15)'
   ctx.lineWidth = 1
-  ctx.beginPath(); ctx.moveTo(0, HEADER_H); ctx.lineTo(canvasW, HEADER_H); ctx.stroke()
+  ctx.beginPath()
+  ctx.moveTo(0, HEADER_H)
+  ctx.lineTo(canvasW, HEADER_H)
+  ctx.stroke()
 
   // ── Sidebar: employee names ───────────────────────────────────────────────────
   ctx.font = '12px system-ui, sans-serif'
@@ -209,20 +270,36 @@ export function exportGantt(opts: GanttExportOptions, fmt: ExportFormat): void {
   // ── Sidebar right border ─────────────────────────────────────────────────────
   ctx.strokeStyle = 'rgba(0,0,0,0.12)'
   ctx.lineWidth = 1
-  ctx.beginPath(); ctx.moveTo(sidebarWidth, 0); ctx.lineTo(sidebarWidth, canvasH); ctx.stroke()
+  ctx.beginPath()
+  ctx.moveTo(sidebarWidth, 0)
+  ctx.lineTo(sidebarWidth, canvasH)
+  ctx.stroke()
 
   // ── Vacation / NRD bars ──────────────────────────────────────────────────────
   const barH = rowHeight - 8
 
   for (let i = 0; i < employees.length; i++) {
     const emp = employees[i]
-    const bars = buildBarsForEmployee(emp, planningYear, scale, showNRD, i, showUnpaidLeave, specialDates)
+    const bars = buildBarsForEmployee(
+      emp,
+      planningYear,
+      scale,
+      showNRD,
+      i,
+      showUnpaidLeave,
+      specialDates,
+    )
     const barY = HEADER_H + i * rowHeight + 4
 
     for (const bar of bars) {
       const barX = sidebarWidth + bar.x
       const barW = Math.max(bar.width, 4)
-      const fillColor = bar.type === 'nrd' ? '#fcd34d' : bar.type === 'unpaid' ? '#9ca3af' : (bar.color ?? '#60a5fa')
+      const fillColor =
+        bar.type === 'nrd'
+          ? '#fcd34d'
+          : bar.type === 'unpaid'
+            ? '#9ca3af'
+            : (bar.color ?? '#60a5fa')
 
       ctx.fillStyle = fillColor
       roundRect(ctx, barX, barY, barW, barH, 3)
@@ -262,13 +339,22 @@ export function exportGantt(opts: GanttExportOptions, fmt: ExportFormat): void {
   ctx.fillRect(0, footerY, canvasW, FOOTER_HEIGHT)
   ctx.strokeStyle = 'rgba(0,0,0,0.10)'
   ctx.lineWidth = 1
-  ctx.beginPath(); ctx.moveTo(0, footerY); ctx.lineTo(canvasW, footerY); ctx.stroke()
+  ctx.beginPath()
+  ctx.moveTo(0, footerY)
+  ctx.lineTo(canvasW, footerY)
+  ctx.stroke()
 
   const footerCounts = new Array(totalDays).fill(0)
   for (const emp of employees) {
     for (const v of [...emp.vacations, ...emp.nrd, ...emp.unpaidLeave]) {
-      const startDay = Math.max(0, differenceInCalendarDays(new Date(v.start), chartStart))
-      const endDay = Math.min(totalDays - 1, differenceInCalendarDays(new Date(v.end), chartStart))
+      const startDay = Math.max(
+        0,
+        differenceInCalendarDays(new Date(v.start), chartStart),
+      )
+      const endDay = Math.min(
+        totalDays - 1,
+        differenceInCalendarDays(new Date(v.end), chartStart),
+      )
       for (let d = startDay; d <= endDay; d++) footerCounts[d]++
     }
   }
@@ -289,7 +375,11 @@ export function exportGantt(opts: GanttExportOptions, fmt: ExportFormat): void {
       ctx.fillStyle = ratio >= 0.8 ? '#1e40af' : '#2563eb'
       ctx.font = `bold ${ppd >= 24 ? 11 : 9}px system-ui, sans-serif`
       ctx.textAlign = 'center'
-      ctx.fillText(String(count), x + ppd / 2, footerY + FOOTER_HEIGHT - barH - 3)
+      ctx.fillText(
+        String(count),
+        x + ppd / 2,
+        footerY + FOOTER_HEIGHT - barH - 3,
+      )
     }
   }
 
@@ -299,7 +389,11 @@ export function exportGantt(opts: GanttExportOptions, fmt: ExportFormat): void {
       const dayOffset = differenceInCalendarDays(monthStart, chartStart)
       const daysInMonth = getDaysInMonth(monthStart)
       let maxInMonth = 0
-      for (let d = dayOffset; d < dayOffset + daysInMonth && d < totalDays; d++) {
+      for (
+        let d = dayOffset;
+        d < dayOffset + daysInMonth && d < totalDays;
+        d++
+      ) {
         if (footerCounts[d] > maxInMonth) maxInMonth = footerCounts[d]
       }
       if (maxInMonth === 0) continue
@@ -309,20 +403,34 @@ export function exportGantt(opts: GanttExportOptions, fmt: ExportFormat): void {
       ctx.fillStyle = ratio >= 0.8 ? '#1e40af' : '#2563eb'
       ctx.font = 'bold 10px system-ui, sans-serif'
       ctx.textAlign = 'center'
-      ctx.fillText(String(maxInMonth), centerX, footerY + FOOTER_HEIGHT - barH - 3)
+      ctx.fillText(
+        String(maxInMonth),
+        centerX,
+        footerY + FOOTER_HEIGHT - barH - 3,
+      )
     }
   }
 
   // ── Download ─────────────────────────────────────────────────────────────────
   const mimeType = fmt === 'jpeg' ? 'image/jpeg' : 'image/png'
-  const dataUrl = fmt === 'jpeg' ? canvas.toDataURL(mimeType, 0.92) : canvas.toDataURL(mimeType)
+  const dataUrl =
+    fmt === 'jpeg'
+      ? canvas.toDataURL(mimeType, 0.92)
+      : canvas.toDataURL(mimeType)
   const link = document.createElement('a')
-  link.download = `gantt-${planningYear}.${fmt}`
+  link.download = `График отпусков-${planningYear}-${SCALES.find((s) => s.value === scale)?.label}.${fmt}`
   link.href = dataUrl
   link.click()
 }
 
-function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
+function roundRect(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  r: number,
+) {
   if (w < 2 * r) r = w / 2
   if (h < 2 * r) r = h / 2
   ctx.beginPath()

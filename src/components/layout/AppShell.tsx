@@ -5,10 +5,12 @@ import {
   Settings2,
   ChevronLeft,
   ChevronRight,
+  BarChart3,
 } from 'lucide-react'
 import { Header } from './Header'
 import { EmployeeList } from '@/components/employees/EmployeeList'
 import { GanttChart } from '@/components/gantt/GanttChart'
+import { ReportPanel } from '@/components/report/ReportPanel'
 import { SpecialDatesEditor } from '@/components/specialDates/SpecialDatesEditor'
 import { ExportImportPanel } from '@/components/export/ExportImportPanel'
 import { SettingsPanel } from '@/components/settings/SettingsPanel'
@@ -49,6 +51,7 @@ function getStoredLeftWidth(): number {
 
 export function AppShell() {
   const [rightPanel, setRightPanel] = useState<RightPanel | null>(null)
+  const [showReport, setShowReport] = useState(false)
   const [leftCollapsed, setLeftCollapsed] = useState(false)
   const [leftWidth, setLeftWidth] = useState(getStoredLeftWidth)
   const dragging = useRef(false)
@@ -124,21 +127,37 @@ export function AppShell() {
           )}
         </div>
 
-        {/* Main: Gantt chart */}
+        {/* Main: Gantt chart or Report */}
         <div className="print-gantt flex-1 overflow-hidden p-2">
-          <GanttChart />
+          {showReport ? <ReportPanel /> : <GanttChart />}
         </div>
 
         {/* Right panel tabs */}
         <div className="no-print flex flex-col border-l border-border flex-shrink-0">
           <div className="flex flex-col gap-1 p-1 border-b border-border">
+            <Button
+              variant={showReport ? 'secondary' : 'ghost'}
+              size="icon"
+              className="h-9 w-9"
+              onClick={() => {
+                setShowReport((v) => !v)
+                if (!showReport) setRightPanel(null)
+              }}
+              title="Отчёт по отпускам"
+            >
+              <BarChart3 className="h-4 w-4" />
+            </Button>
+            <div className="h-px bg-border mx-1" />
             {RIGHT_PANELS.map((panel) => (
               <Button
                 key={panel.id}
                 variant={rightPanel === panel.id ? 'secondary' : 'ghost'}
                 size="icon"
                 className="h-9 w-9"
-                onClick={() => toggleRight(panel.id)}
+                onClick={() => {
+                  toggleRight(panel.id)
+                  setShowReport(false)
+                }}
                 title={panel.label}
               >
                 {panel.icon}

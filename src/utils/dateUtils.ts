@@ -114,6 +114,22 @@ export function effectiveVacationEnd(start: string, end: string, holidayDates: S
   return format(curEnd, 'yyyy-MM-dd')
 }
 
+// Days of a vacation interval that fall within [year-01-01, year-12-31], excluding holidays.
+export function vacationDaysInYear(
+  start: string,
+  end: string,
+  year: number,
+  holidayDates: Set<string>,
+  cutoffDate?: string,
+): number {
+  const yearStart = `${year}-01-01`
+  const yearEnd = cutoffDate && cutoffDate < `${year}-12-31` ? cutoffDate : `${year}-12-31`
+  const s = start < yearStart ? yearStart : start
+  const e = end > yearEnd ? yearEnd : end
+  if (s > e) return 0
+  return vacationDaysUsed(s, e, holidayDates)
+}
+
 // Calendar days of vacation that count against the norm (total – holidays in [start, end]).
 export function vacationDaysUsed(start: string, end: string, holidayDates: Set<string>): number {
   const total = intervalDays(start, end)

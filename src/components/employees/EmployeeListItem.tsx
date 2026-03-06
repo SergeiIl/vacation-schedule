@@ -45,7 +45,7 @@ export function EmployeeListItem({ employee, onEdit, style }: Props) {
     <div
       style={style}
       className={cn(
-        'flex items-center gap-2 px-2 py-1.5 border-b border-border cursor-pointer hover:bg-accent/50 transition-colors group',
+        'relative flex items-center gap-2 px-2 py-1.5 border-b border-border cursor-pointer hover:bg-accent/50 transition-colors group',
         isSelected && 'bg-accent',
       )}
       onClick={() => setSelected(isSelected ? null : employee.id)}
@@ -87,7 +87,7 @@ export function EmployeeListItem({ employee, onEdit, style }: Props) {
           />
         </div>
       </div>
-      <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+      <div className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity bg-accent/90 rounded shadow-sm">
         <Button
           variant="ghost"
           size="icon"
