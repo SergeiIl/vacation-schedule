@@ -10,4 +10,7 @@ export interface Settings {
   showNRD: boolean
   showUnpaidLeave: boolean
   maxConcurrentVacations: number | null
+  vacationDaysNorm: number
+  nrdColor: string
+  unpaidColor: string
 }

@@ -9,6 +9,13 @@ import { useSettingsStore } from '@/store'
 import type { GanttBar as GanttBarType } from '@/types/gantt'
 import { cn } from '@/lib/utils'
 
+function contrastColor(hex: string): string {
+  const r = parseInt(hex.slice(1, 3), 16)
+  const g = parseInt(hex.slice(3, 5), 16)
+  const b = parseInt(hex.slice(5, 7), 16)
+  return (0.299 * r + 0.587 * g + 0.114 * b) / 255 > 0.55 ? '#1f2937' : '#ffffff'
+}
+
 interface Props {
   bar: GanttBarType
   rowHeight: number
@@ -18,7 +25,7 @@ interface Props {
 export function GanttBar({ bar, rowHeight, allBars }: Props) {
   const { dragState, startDrag } = useDragContext()
   const { openMenu } = useBarContextMenu()
-  const { scale, planningYear } = useSettingsStore()
+  const { scale, planningYear, nrdColor, unpaidColor } = useSettingsStore()
   const leftHandleRef = useRef<HTMLDivElement>(null)
   const rightHandleRef = useRef<HTMLDivElement>(null)
   const [tooltipPos, setTooltipPos] = useState<{ x: number; y: number } | null>(null)
@@ -68,8 +75,6 @@ export function GanttBar({ bar, rowHeight, allBars }: Props) {
         className={cn(
           'gantt-bar',
           bar.type === 'vacation' && !isDragging && !bar.color && 'gantt-bar-vacation',
-          bar.type === 'nrd' && !isDragging && 'gantt-bar-nrd',
-          bar.type === 'unpaid' && !isDragging && 'gantt-bar-unpaid',
           isDragging && isValid && 'opacity-90 shadow-lg',
           isDragging && !isValid && 'gantt-bar-invalid',
           'overflow-hidden',
@@ -79,12 +84,17 @@ export function GanttBar({ bar, rowHeight, allBars }: Props) {
           width: Math.max(displayWidth, 4),
           height: barHeight,
           zIndex: isDragging ? 10 : 1,
-          // Custom color for vacation bars
           ...(bar.type === 'vacation' && bar.color && !isDragging
             ? { backgroundColor: bar.color, color: '#fff' }
             : {}),
+          ...(bar.type === 'nrd' && !isDragging
+            ? { backgroundColor: nrdColor, color: contrastColor(nrdColor) }
+            : {}),
+          ...(bar.type === 'unpaid' && !isDragging
+            ? { backgroundColor: unpaidColor, color: contrastColor(unpaidColor) }
+            : {}),
           ...(isDragging && isValid
-            ? { backgroundColor: bar.type === 'nrd' ? '#fcd34d' : bar.type === 'unpaid' ? '#9ca3af' : (bar.color ?? '#60a5fa') }
+            ? { backgroundColor: bar.type === 'nrd' ? nrdColor : bar.type === 'unpaid' ? unpaidColor : (bar.color ?? '#60a5fa') }
             : {}),
         }}
         onPointerDown={(e) => {

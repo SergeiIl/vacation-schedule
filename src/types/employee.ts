@@ -26,4 +26,5 @@ export interface Employee {
   createdAt: string
   color?: string // hex color for Gantt bars
   position?: string // job title / department
+  vacationDaysOverride?: number // individual norm override
 }

@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/Dialog'
 import { useEmployeeStore } from '@/store'
 import { useSpecialDateStore } from '@/store'
+import { useSettingsStore } from '@/store'
 import type { Employee } from '@/types/employee'
 import { intervalDays } from '@/utils/dateUtils'
 import { checkConflicts } from '@/utils/validation'
@@ -28,12 +29,16 @@ interface Props {
 export function EmployeeListItem({ employee, onEdit, style }: Props) {
   const { selected, setSelected, removeEmployee, duplicateEmployee } = useEmployeeStore()
   const { specialDates } = useSpecialDateStore()
+  const { vacationDaysNorm } = useSettingsStore()
   const isSelected = selected === employee.id
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [skipNextTime, setSkipNextTime] = useState(false)
 
   const totalVacDays = employee.vacations.reduce((sum, v) => sum + intervalDays(v.start, v.end), 0)
   const hasConflict = checkConflicts(employee.vacations, specialDates)
+  const norm = employee.vacationDaysOverride ?? vacationDaysNorm
+  const remaining = norm - totalVacDays
+  const pct = Math.min(100, Math.round((totalVacDays / norm) * 100))
 
   return (
     <div
@@ -61,13 +66,24 @@ export function EmployeeListItem({ employee, onEdit, style }: Props) {
             <span className="text-[11px] text-muted-foreground truncate">{employee.position}</span>
           )}
           {employee.position && <span className="text-[10px] text-muted-foreground/50">·</span>}
-          <span className="text-[11px] text-muted-foreground flex-shrink-0">{totalVacDays} дн.</span>
+          <span
+            className={cn('text-[11px] flex-shrink-0', remaining < 0 ? 'text-destructive font-medium' : 'text-muted-foreground')}
+            title={`Использовано: ${totalVacDays} / ${norm} дн. | Остаток: ${remaining}`}
+          >
+            {totalVacDays}/{norm} дн.
+          </span>
           {employee.nrd.length > 0 && (
             <Badge variant="warning" className="text-[10px] px-1 py-0 flex-shrink-0">НРД</Badge>
           )}
           {employee.unpaidLeave.length > 0 && (
             <Badge variant="secondary" className="text-[10px] px-1 py-0 flex-shrink-0">ЗСС</Badge>
           )}
+        </div>
+        <div className="w-full h-1 rounded-full bg-muted overflow-hidden mt-0.5">
+          <div
+            className={cn('h-full rounded-full transition-all', remaining < 0 ? 'bg-destructive' : 'bg-primary')}
+            style={{ width: `${pct}%` }}
+          />
         </div>
       </div>
       <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">

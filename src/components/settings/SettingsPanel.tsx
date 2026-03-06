@@ -23,6 +23,9 @@ export function SettingsPanel() {
     showNRD,
     showUnpaidLeave,
     maxConcurrentVacations,
+    vacationDaysNorm,
+    nrdColor,
+    unpaidColor,
     setScale,
     setYear,
     setRowHeight,
@@ -30,9 +33,13 @@ export function SettingsPanel() {
     toggleShowNRD,
     toggleShowUnpaidLeave,
     setMaxConcurrentVacations,
+    setVacationDaysNorm,
+    setNrdColor,
+    setUnpaidColor,
   } = useSettingsStore()
 
   const [maxInput, setMaxInput] = useState(String(maxConcurrentVacations ?? ''))
+  const [normInput, setNormInput] = useState(String(vacationDaysNorm))
 
   const { employees } = useEmployeeStore()
 
@@ -42,12 +49,18 @@ export function SettingsPanel() {
   )
 
   const statsRows = [...employees]
-    .map((emp) => ({
-      name: emp.fullName,
-      vacDays: emp.vacations.reduce((s, v) => s + intervalDays(v.start, v.end), 0),
-      nrdDays: emp.nrd.reduce((s, n) => s + intervalDays(n.start, n.end), 0),
-      unpaidDays: emp.unpaidLeave.reduce((s, u) => s + intervalDays(u.start, u.end), 0),
-    }))
+    .map((emp) => {
+      const vacDays = emp.vacations.reduce((s, v) => s + intervalDays(v.start, v.end), 0)
+      const norm = emp.vacationDaysOverride ?? vacationDaysNorm
+      return {
+        name: emp.fullName,
+        vacDays,
+        nrdDays: emp.nrd.reduce((s, n) => s + intervalDays(n.start, n.end), 0),
+        unpaidDays: emp.unpaidLeave.reduce((s, u) => s + intervalDays(u.start, u.end), 0),
+        norm,
+        remaining: norm - vacDays,
+      }
+    })
     .sort((a, b) => b.vacDays - a.vacDays)
 
   return (
@@ -117,17 +130,58 @@ export function SettingsPanel() {
         </div>
         <div className="flex items-center justify-between">
           <Label htmlFor="showNRD" className="font-normal">Показывать НРД</Label>
-          <Switch id="showNRD" checked={showNRD} onCheckedChange={toggleShowNRD} />
+          <div className="flex items-center gap-2">
+            <input
+              type="color"
+              value={nrdColor}
+              onChange={(e) => setNrdColor(e.target.value)}
+              className="h-6 w-6 rounded cursor-pointer border border-border"
+              title="Цвет НРД"
+            />
+            <Switch id="showNRD" checked={showNRD} onCheckedChange={toggleShowNRD} />
+          </div>
         </div>
         <div className="flex items-center justify-between">
           <Label htmlFor="showUnpaidLeave" className="font-normal">Показывать отпуска за свой счёт</Label>
-          <Switch id="showUnpaidLeave" checked={showUnpaidLeave} onCheckedChange={toggleShowUnpaidLeave} />
+          <div className="flex items-center gap-2">
+            <input
+              type="color"
+              value={unpaidColor}
+              onChange={(e) => setUnpaidColor(e.target.value)}
+              className="h-6 w-6 rounded cursor-pointer border border-border"
+              title="Цвет ЗСС"
+            />
+            <Switch id="showUnpaidLeave" checked={showUnpaidLeave} onCheckedChange={toggleShowUnpaidLeave} />
+          </div>
         </div>
       </section>
 
       {/* Rules */}
       <section className="space-y-3">
         <Label className="text-sm font-semibold">Правила</Label>
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <Label htmlFor="ruleVacNorm" className="font-normal">
+              Норма дней отпуска
+            </Label>
+            <div className="flex items-center gap-2">
+              <input
+                id="ruleVacNorm"
+                type="number"
+                min={1}
+                max={365}
+                value={normInput}
+                onChange={(e) => {
+                  setNormInput(e.target.value)
+                  const v = parseInt(e.target.value)
+                  if (!isNaN(v) && v > 0) setVacationDaysNorm(v)
+                }}
+                className="w-20 h-7 rounded-md border border-input bg-background px-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+              />
+              <span className="text-sm text-muted-foreground">дн.</span>
+            </div>
+          </div>
+        </div>
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <Label htmlFor="ruleMaxConcurrent" className="font-normal">
@@ -188,6 +242,7 @@ export function SettingsPanel() {
                 <th className="text-right px-2 py-1.5 font-medium">НРД</th>
                 <th className="text-right px-2 py-1.5 font-medium">ЗСС</th>
                 <th className="text-right px-2 py-1.5 font-medium">Итого</th>
+                <th className="text-right px-2 py-1.5 font-medium">Остаток</th>
               </tr>
             </thead>
             <tbody>
@@ -206,11 +261,14 @@ export function SettingsPanel() {
                   <td className="px-2 py-1 text-right font-medium">
                     {row.vacDays + row.nrdDays + row.unpaidDays}
                   </td>
+                  <td className={`px-2 py-1 text-right font-medium ${row.remaining < 0 ? 'text-destructive' : 'text-muted-foreground'}`}>
+                    {row.remaining}
+                  </td>
                 </tr>
               ))}
               {employees.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="px-2 py-3 text-center text-muted-foreground">
+                  <td colSpan={6} className="px-2 py-3 text-center text-muted-foreground">
                     Нет данных
                   </td>
                 </tr>

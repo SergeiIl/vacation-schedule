@@ -62,6 +62,9 @@ export function AddEmployeeModal({ employee, onClose }: Props) {
   const [fullName, setFullName] = useState(employee?.fullName ?? '')
   const [nameError, setNameError] = useState('')
   const [position, setPosition] = useState(employee?.position ?? '')
+  const [vacationDaysOverride, setVacationDaysOverride] = useState(
+    employee?.vacationDaysOverride != null ? String(employee.vacationDaysOverride) : '',
+  )
   const [color, setColor] = useState(
     employee?.color ?? PALETTE[employees.length % PALETTE.length],
   )
@@ -313,6 +316,9 @@ export function AddEmployeeModal({ employee, onClose }: Props) {
       end: u.end,
     }))
 
+    const normOverride = parseInt(vacationDaysOverride)
+    const parsedOverride = !isNaN(normOverride) && normOverride > 0 ? normOverride : undefined
+
     if (employee) {
       updateEmployee(employee.id, {
         fullName: fullName.trim(),
@@ -321,6 +327,7 @@ export function AddEmployeeModal({ employee, onClose }: Props) {
         nrd: nrdIntervals,
         unpaidLeave: unpaidLeaveIntervals,
         color,
+        vacationDaysOverride: parsedOverride,
       })
     } else {
       addEmployee({
@@ -330,6 +337,7 @@ export function AddEmployeeModal({ employee, onClose }: Props) {
         nrd: nrdIntervals,
         unpaidLeave: unpaidLeaveIntervals,
         color,
+        vacationDaysOverride: parsedOverride,
       })
     }
 
@@ -381,6 +389,24 @@ export function AddEmployeeModal({ employee, onClose }: Props) {
                 ))}
               </datalist>
             )}
+          </div>
+
+          {/* Vacation norm override */}
+          <div className="space-y-1.5">
+            <Label htmlFor="vacNormOverride">Норма дней отпуска</Label>
+            <div className="flex items-center gap-2">
+              <input
+                id="vacNormOverride"
+                type="number"
+                min={1}
+                max={365}
+                value={vacationDaysOverride}
+                onChange={(e) => setVacationDaysOverride(e.target.value)}
+                placeholder="По умолчанию (из настроек)"
+                className="w-full h-9 rounded-md border border-input bg-background px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+              />
+            </div>
+            <p className="text-xs text-muted-foreground">Оставьте пустым для использования глобальной нормы</p>
           </div>
 
           {/* Bar color */}

@@ -11,6 +11,9 @@ interface SettingsState extends Settings {
   toggleShowNRD: () => void
   toggleShowUnpaidLeave: () => void
   setMaxConcurrentVacations: (v: number | null) => void
+  setVacationDaysNorm: (v: number) => void
+  setNrdColor: (color: string) => void
+  setUnpaidColor: (color: string) => void
   applySettings: (s: Partial<Settings>) => void
 }
 
@@ -25,6 +28,9 @@ const FALLBACK: Settings = {
   showNRD: true,
   showUnpaidLeave: true,
   maxConcurrentVacations: null,
+  vacationDaysNorm: 28,
+  nrdColor: '#fbbf24',
+  unpaidColor: '#d1d5db',
 }
 
 const MIN_ROW_HEIGHT = 44
@@ -60,6 +66,9 @@ function toPlain(state: SettingsState): Settings {
     showNRD: state.showNRD,
     showUnpaidLeave: state.showUnpaidLeave,
     maxConcurrentVacations: state.maxConcurrentVacations,
+    vacationDaysNorm: state.vacationDaysNorm,
+    nrdColor: state.nrdColor,
+    unpaidColor: state.unpaidColor,
   }
 }
 
@@ -114,6 +123,21 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
 
   setMaxConcurrentVacations: (maxConcurrentVacations) => {
     set({ maxConcurrentVacations })
+    persist(toPlain(get()))
+  },
+
+  setVacationDaysNorm: (vacationDaysNorm) => {
+    set({ vacationDaysNorm })
+    persist(toPlain(get()))
+  },
+
+  setNrdColor: (nrdColor) => {
+    set({ nrdColor })
+    persist(toPlain(get()))
+  },
+
+  setUnpaidColor: (unpaidColor) => {
+    set({ unpaidColor })
     persist(toPlain(get()))
   },
 
