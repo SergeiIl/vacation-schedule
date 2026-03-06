@@ -130,6 +130,16 @@ export function vacationDaysInYear(
   return vacationDaysUsed(s, e, holidayDates)
 }
 
+// Calendar days of an interval clipped to [year-01-01, year-12-31], optionally with a cutoff date.
+export function calendarDaysInYear(start: string, end: string, year: number, cutoffDate?: string): number {
+  const yearStart = `${year}-01-01`
+  const yearEnd = cutoffDate && cutoffDate < `${year}-12-31` ? cutoffDate : `${year}-12-31`
+  const s = start < yearStart ? yearStart : start
+  const e = end > yearEnd ? yearEnd : end
+  if (s > e) return 0
+  return intervalDays(s, e)
+}
+
 // Calendar days of vacation that count against the norm (total – holidays in [start, end]).
 export function vacationDaysUsed(start: string, end: string, holidayDates: Set<string>): number {
   const total = intervalDays(start, end)

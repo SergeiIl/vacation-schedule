@@ -3,9 +3,9 @@ import { useEmployeeStore } from '@/store'
 import { useSpecialDateStore } from '@/store'
 import { useSettingsStore } from '@/store'
 import {
-  intervalDays,
   buildStatutoryHolidayDates,
   vacationDaysInYear,
+  calendarDaysInYear,
 } from '@/utils/dateUtils'
 import { format } from 'date-fns'
 
@@ -45,19 +45,19 @@ export function ReportPanel() {
         0,
       )
       const nrdDays = emp.nrd.reduce(
-        (s, n) => s + intervalDays(n.start, n.end),
+        (s, n) => s + calendarDaysInYear(n.start, n.end, planningYear),
         0,
       )
       const takenNrdDays = emp.nrd.reduce(
-        (s, n) => (n.end > today ? s : s + intervalDays(n.start, n.end)),
+        (s, n) => s + calendarDaysInYear(n.start, n.end, planningYear, today),
         0,
       )
       const unpaidDays = emp.unpaidLeave.reduce(
-        (s, u) => s + intervalDays(u.start, u.end),
+        (s, u) => s + calendarDaysInYear(u.start, u.end, planningYear),
         0,
       )
       const takenUnpaidDays = emp.unpaidLeave.reduce(
-        (s, u) => (u.end > today ? s : s + intervalDays(u.start, u.end)),
+        (s, u) => s + calendarDaysInYear(u.start, u.end, planningYear, today),
         0,
       )
       const norm = emp.vacationDaysOverride ?? vacationDaysNorm
