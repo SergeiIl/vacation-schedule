@@ -1,7 +1,7 @@
 import { parseISO } from 'date-fns'
 import type { Employee } from '@/types/employee'
 import type { GanttBar, DragState } from '@/types/gantt'
-import { dateToPixel, PIXELS_PER_DAY, getChartStartDate, collectHolidayDates, effectiveVacationEnd } from './dateUtils'
+import { dateToPixel, PIXELS_PER_DAY, getChartStartDate, buildStatutoryHolidayDates, effectiveVacationEnd } from './dateUtils'
 import type { Scale } from '@/types/settings'
 import type { SpecialDate } from '@/types/specialDate'
 
@@ -17,8 +17,8 @@ export function buildBarsForEmployee(
   const chartStart = getChartStartDate(year)
   const ppd = PIXELS_PER_DAY[scale]
   const bars: GanttBar[] = []
-  // Only statutory holidays (ст. 112 ТК РФ) extend vacations
-  const statutoryHolidayDates = collectHolidayDates(specialDates, true)
+  // Only statutory holidays (ст. 112 ТК РФ) extend vacations; uses getRussianHolidays(year) directly
+  const statutoryHolidayDates = buildStatutoryHolidayDates(year, specialDates)
 
   for (const vacation of employee.vacations) {
     const startDate = parseISO(vacation.start)

@@ -17,6 +17,7 @@ import {
 import { ru } from 'date-fns/locale'
 import type { Scale } from '@/types/settings'
 import type { SpecialDate } from '@/types/specialDate'
+import { getRussianHolidays } from './russianHolidays'
 
 export const PIXELS_PER_DAY: Record<Scale, number> = {
   day: 32,
@@ -64,6 +65,35 @@ export function collectHolidayDates(specialDates: SpecialDate[], statutoryOnly =
     const days = differenceInCalendarDays(end, start) + 1
     for (let i = 0; i < days; i++) {
       set.add(format(addDays(start, i), 'yyyy-MM-dd'))
+    }
+  }
+  return set
+}
+
+// Строит Set дат законных праздников (ст. 112 ТК РФ) для года:
+// всегда включает базовые РФ-праздники из getRussianHolidays + пользовательские с isStatutory=true.
+// Не зависит от наличия isStatutory в сохранённых SpecialDate.
+export function buildStatutoryHolidayDates(year: number, specialDates: SpecialDate[]): Set<string> {
+  const set = new Set<string>()
+  // Базовые законные праздники РФ (всегда, независимо от stored-флага)
+  for (const h of getRussianHolidays(year)) {
+    if (!h.isBase) continue
+    const start = parseISO(h.start)
+    const end = parseISO(h.end)
+    const days = differenceInCalendarDays(end, start) + 1
+    for (let i = 0; i < days; i++) {
+      set.add(format(addDays(start, i), 'yyyy-MM-dd'))
+    }
+  }
+  // Пользовательские праздники, явно помеченные как законные
+  for (const sd of specialDates) {
+    if (sd.type === 'holiday' && sd.isStatutory) {
+      const start = parseISO(sd.start)
+      const end = sd.end ? parseISO(sd.end) : start
+      const days = differenceInCalendarDays(end, start) + 1
+      for (let i = 0; i < days; i++) {
+        set.add(format(addDays(start, i), 'yyyy-MM-dd'))
+      }
     }
   }
   return set
