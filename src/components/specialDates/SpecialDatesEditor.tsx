@@ -1,14 +1,15 @@
 import { useState } from 'react'
-import { Plus, Trash2, Pencil, AlertTriangle } from 'lucide-react'
+import { Plus, Trash2, Pencil, AlertTriangle, CalendarDays } from 'lucide-react'
 import { differenceInCalendarDays, parseISO } from 'date-fns'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/Tabs'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Label } from '@/components/ui/Label'
 import { Badge } from '@/components/ui/Badge'
-import { useSpecialDateStore } from '@/store'
+import { useSpecialDateStore, useSettingsStore } from '@/store'
 import type { SpecialDate } from '@/types/specialDate'
 import { format } from 'date-fns'
+import { getRussianHolidays } from '@/utils/russianHolidays'
 
 const today = format(new Date(), 'yyyy-MM-dd')
 
@@ -101,12 +102,23 @@ function SpecialDateForm({
 export function SpecialDatesEditor() {
   const { specialDates, addSpecialDate, updateSpecialDate, removeSpecialDate } =
     useSpecialDateStore()
+  const { planningYear } = useSettingsStore()
 
   const [addingType, setAddingType] = useState<'holiday' | 'forbidden' | null>(null)
   const [editingId, setEditingId] = useState<string | null>(null)
 
   const holidays = specialDates.filter((sd) => sd.type === 'holiday')
   const forbidden = specialDates.filter((sd) => sd.type === 'forbidden')
+
+  const handleLoadRussianHolidays = () => {
+    const preset = getRussianHolidays(planningYear)
+    const existingStarts = new Set(holidays.map((h) => h.start))
+    for (const h of preset) {
+      if (!existingStarts.has(h.start)) {
+        addSpecialDate({ type: 'holiday', name: h.name, start: h.start, end: h.end })
+      }
+    }
+  }
 
   const handleSave = (type: 'holiday' | 'forbidden', form: FormState) => {
     if (form.id) {
@@ -220,7 +232,18 @@ export function SpecialDatesEditor() {
             )}
           </TabsTrigger>
         </TabsList>
-        <TabsContent value="holidays">{renderList(holidays, 'holiday')}</TabsContent>
+        <TabsContent value="holidays">
+          <Button
+            variant="outline"
+            size="sm"
+            className="w-full mb-3 text-xs gap-1.5"
+            onClick={handleLoadRussianHolidays}
+          >
+            <CalendarDays className="h-3.5 w-3.5" />
+            Загрузить праздники РФ {planningYear}
+          </Button>
+          {renderList(holidays, 'holiday')}
+        </TabsContent>
         <TabsContent value="forbidden">{renderList(forbidden, 'forbidden')}</TabsContent>
       </Tabs>
     </div>

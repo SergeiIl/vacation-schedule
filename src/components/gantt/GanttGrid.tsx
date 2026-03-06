@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { addDays, isWeekend } from 'date-fns'
+import { addDays, isWeekend, differenceInCalendarDays, parseISO } from 'date-fns'
 import { useSettingsStore } from '@/store'
 import { useSpecialDateStore } from '@/store'
 import { useEmployeeStore } from '@/store'
@@ -19,7 +19,7 @@ interface Props {
 
 export function GanttGrid({ totalWidth, totalHeight }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const { scale, planningYear, showWeekends, rowHeight } = useSettingsStore()
+  const { scale, planningYear, showWeekends, rowHeight, maxConcurrentVacations } = useSettingsStore()
   const { specialDates } = useSpecialDateStore()
   const { employees } = useEmployeeStore()
 
@@ -92,6 +92,24 @@ export function GanttGrid({ totalWidth, totalHeight }: Props) {
       }
     }
 
+    // Draw violation overlay (days exceeding maxConcurrentVacations)
+    if (maxConcurrentVacations !== null && maxConcurrentVacations > 0) {
+      const dayCounts = new Array(totalDays).fill(0)
+      for (const emp of employees) {
+        for (const vac of emp.vacations) {
+          const startDay = Math.max(0, differenceInCalendarDays(parseISO(vac.start), chartStart))
+          const endDay = Math.min(totalDays - 1, differenceInCalendarDays(parseISO(vac.end), chartStart))
+          for (let d = startDay; d <= endDay; d++) dayCounts[d]++
+        }
+      }
+      ctx.fillStyle = 'rgba(239, 68, 68, 0.15)'
+      for (let i = 0; i < totalDays; i++) {
+        if (dayCounts[i] > maxConcurrentVacations) {
+          ctx.fillRect(i * ppd, 0, ppd, totalHeight)
+        }
+      }
+    }
+
     // Draw today line
     const today = new Date()
     const todayYear = today.getFullYear()
@@ -118,7 +136,7 @@ export function GanttGrid({ totalWidth, totalHeight }: Props) {
       ctx.stroke()
     }
 
-  }, [scale, planningYear, specialDates, totalWidth, totalHeight, showWeekends, rowHeight, employees])
+  }, [scale, planningYear, specialDates, totalWidth, totalHeight, showWeekends, rowHeight, employees, maxConcurrentVacations])
 
   return (
     <canvas

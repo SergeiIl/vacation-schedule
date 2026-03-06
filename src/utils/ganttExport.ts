@@ -27,6 +27,7 @@ export interface GanttExportOptions {
   showWeekends: boolean
   showNRD: boolean
   showUnpaidLeave: boolean
+  maxConcurrentVacations: number | null
 }
 
 const HEADER_H = 52
@@ -34,7 +35,7 @@ const TOP_ROW_H = 20
 const EXPORT_DPR = 2
 
 export function exportGantt(opts: GanttExportOptions, fmt: ExportFormat): void {
-  const { employees, specialDates, planningYear, scale, rowHeight, sidebarWidth, showWeekends, showNRD, showUnpaidLeave } = opts
+  const { employees, specialDates, planningYear, scale, rowHeight, sidebarWidth, showWeekends, showNRD, showUnpaidLeave, maxConcurrentVacations } = opts
 
   const ppd = PIXELS_PER_DAY[scale]
   const totalDays = getTotalDays(planningYear)
@@ -97,6 +98,24 @@ export function exportGantt(opts: GanttExportOptions, fmt: ExportFormat): void {
     if (isInForbiddenPeriod(date, specialDates)) {
       ctx.fillStyle = hatchPattern
       ctx.fillRect(x, HEADER_H, ppd, totalH)
+    }
+  }
+
+  // ── Violation overlay (days exceeding maxConcurrentVacations) ────────────────
+  if (maxConcurrentVacations !== null && maxConcurrentVacations > 0) {
+    const dayCounts = new Array(totalDays).fill(0)
+    for (const emp of employees) {
+      for (const vac of emp.vacations) {
+        const startDay = Math.max(0, differenceInCalendarDays(new Date(vac.start), chartStart))
+        const endDay = Math.min(totalDays - 1, differenceInCalendarDays(new Date(vac.end), chartStart))
+        for (let d = startDay; d <= endDay; d++) dayCounts[d]++
+      }
+    }
+    ctx.fillStyle = 'rgba(239, 68, 68, 0.15)'
+    for (let i = 0; i < totalDays; i++) {
+      if (dayCounts[i] > maxConcurrentVacations) {
+        ctx.fillRect(sidebarWidth + i * ppd, HEADER_H, ppd, totalH)
+      }
     }
   }
 
