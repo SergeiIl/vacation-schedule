@@ -319,16 +319,29 @@ export function exportGantt(opts: GanttExportOptions, fmt: ExportFormat): void {
       // Outside label: date range in dd.MM format (matches live UI)
       const dateLabel = `${format(bar.startDate, 'dd.MM')}-${format(bar.endDate, 'dd.MM')}`
       ctx.font = '10px system-ui, sans-serif'
-      const textWidth = ctx.measureText(dateLabel).width + 8
+      const textWidth = ctx.measureText(dateLabel).width
+      const MARGIN = 4
       const rightEdge = barX + barW
-      if (rightEdge + textWidth <= canvasW) {
+      const rawRight = bar.x + barW  // raw x without sidebar, for neighbor check
+
+      const hasRightBlocking = bars.some(
+        (b) => b.vacationId !== bar.vacationId && b.x >= rawRight - 1 && b.x < rawRight + textWidth + MARGIN,
+      )
+      const hasLeftBlocking = bars.some(
+        (b) => {
+          const bRight = b.x + Math.max(b.width, 4)
+          return b.vacationId !== bar.vacationId && bRight <= bar.x + 1 && bRight > bar.x - textWidth - MARGIN
+        },
+      )
+
+      if (!hasRightBlocking && rightEdge + textWidth + MARGIN <= canvasW) {
         ctx.fillStyle = '#4b5563'
         ctx.textAlign = 'left'
-        ctx.fillText(dateLabel, rightEdge + 4, barY + barH / 2)
-      } else if (barX - textWidth >= sidebarWidth) {
+        ctx.fillText(dateLabel, rightEdge + MARGIN, barY + barH / 2)
+      } else if (!hasLeftBlocking && barX - textWidth - MARGIN >= sidebarWidth) {
         ctx.fillStyle = '#4b5563'
         ctx.textAlign = 'right'
-        ctx.fillText(dateLabel, barX - 4, barY + barH / 2)
+        ctx.fillText(dateLabel, barX - MARGIN, barY + barH / 2)
       }
     }
   }
