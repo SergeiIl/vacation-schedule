@@ -47,6 +47,8 @@ Singleton pattern in `src/db/indexedDB.ts` — `getDB()` opens/creates the DB. T
 - Bars are built by `buildBarsForEmployee()` in `src/utils/ganttLayout.ts`
 - Each `GanttBar` carries `employeeId`, `vacationId` (actually the interval id), and `type: 'vacation' | 'nrd' | 'unpaid'`
 
+> **Важно:** любые правки визуального поведения баров (позиционирование подписей, логика отображения, цвета и т.д.) нужно дублировать в `src/utils/ganttExport.ts`, который рисует диаграмму на canvas для экспорта в PNG/JPEG.
+
 ### Drag and Drop
 
 `DnDHandler` (`src/components/gantt/DnDHandler.tsx`) is a React Context Provider wrapping the chart. Uses raw Pointer Events (not dnd-kit):
