@@ -1,0 +1,1256 @@
+{
+  "employees": [
+    {
+      "fullName": "Иль Мария Владимировна",
+      "position": "начальник мастерской",
+      "vacations": [
+        {
+          "id": "KPpLrgPUCNH86vPFh2-IA",
+          "start": "2026-09-28",
+          "end": "2026-10-11"
+        }
+      ],
+      "nrd": [],
+      "color": "#ec4899",
+      "id": "BqiL4Dn6MJUiJ7YVGmfzA",
+      "createdAt": "2026-03-05T06:33:59.581Z",
+      "order": 0,
+      "unpaidLeave": [
+        {
+          "id": "CvEAnH_bN_FGMt83A821J",
+          "start": "2026-04-20",
+          "end": "2026-04-24"
+        },
+        {
+          "id": "Q2Xiwtf7ryz00f5WzY8J1",
+          "start": "2026-04-27",
+          "end": "2026-04-30"
+        },
+        {
+          "id": "5Nw_Opxg0gwuioifdSLra",
+          "start": "2026-07-06",
+          "end": "2026-07-10"
+        }
+      ]
+    },
+    {
+      "fullName": "Лукьяненко Сергей",
+      "position": "заместитель начальника управления",
+      "vacations": [
+        {
+          "id": "jsegYFKqEKQ1hMdkDG0w-",
+          "start": "2026-06-02",
+          "end": "2026-06-08"
+        },
+        {
+          "id": "mbzg12NPjPVnptaTqGEwD",
+          "start": "2026-10-12",
+          "end": "2026-10-25"
+        },
+        {
+          "id": "OD0VoP8z5RTQwugHRC3wA",
+          "start": "2026-12-14",
+          "end": "2026-12-20"
+        }
+      ],
+      "nrd": [
+        {
+          "id": "kh1lBZwFxX_7CTK_y2u3-",
+          "start": "2026-06-09",
+          "end": "2026-06-11"
+        }
+      ],
+      "color": "#ec4899",
+      "id": "PGaDhchiCMn2HVk2h1umB",
+      "createdAt": "2026-03-05T06:45:54.877Z",
+      "order": 1,
+      "unpaidLeave": []
+    },
+    {
+      "fullName": "Антонов Рафаэль Владимирович",
+      "position": "начальник мастерской",
+      "vacations": [
+        {
+          "id": "ErzELSR69LxYBPZntVwpV",
+          "start": "2026-07-13",
+          "end": "2026-07-19"
+        },
+        {
+          "id": "4Q5koJzsBrNRr2P13Tlr9",
+          "start": "2026-10-26",
+          "end": "2026-11-01"
+        }
+      ],
+      "nrd": [],
+      "color": "#84cc16",
+      "id": "bQtkVtTbnMQGzQSsjzlAl",
+      "createdAt": "2026-03-05T06:48:19.426Z",
+      "order": 2,
+      "unpaidLeave": [
+        {
+          "id": "ERAeT3hXLupRDL16uDenj",
+          "start": "2026-03-10",
+          "end": "2026-03-13"
+        },
+        {
+          "id": "yG4sODaRppI9YmOMthito",
+          "start": "2026-05-04",
+          "end": "2026-05-08"
+        }
+      ]
+    },
+    {
+      "fullName": "Бородина Мария Андреевна",
+      "position": "ГАП",
+      "vacations": [
+        {
+          "id": "ZV7hOAzq8fZ1U1_Za3yvZ",
+          "start": "2026-07-20",
+          "end": "2026-07-26"
+        },
+        {
+          "id": "FJvf2kVRAH8rp4WCWu_1l",
+          "start": "2026-10-19",
+          "end": "2026-10-25"
+        }
+      ],
+      "nrd": [],
+      "color": "#84cc16",
+      "id": "5bdoHOAuoQgeTWav3FjT8",
+      "createdAt": "2026-03-05T06:51:45.858Z",
+      "order": 3,
+      "unpaidLeave": [
+        {
+          "id": "LwgTtazlsg77F0-czegth",
+          "start": "2026-05-04",
+          "end": "2026-05-06"
+        },
+        {
+          "id": "NtrV1dqSX9aaqfNVPQW-N",
+          "start": "2026-07-27",
+          "end": "2026-08-02"
+        }
+      ]
+    },
+    {
+      "fullName": "Нарышкина Мария Ильинична",
+      "vacations": [
+        {
+          "id": "o1FrNYyCebaIV2YAROpy6",
+          "start": "2026-08-03",
+          "end": "2026-08-09"
+        },
+        {
+          "id": "rRlGgyKwCwkBS5r5H-eIp",
+          "start": "2026-11-09",
+          "end": "2026-11-15"
+        }
+      ],
+      "nrd": [],
+      "color": "#84cc16",
+      "id": "xPmCDypnrx7mMyvJ74Ufc",
+      "createdAt": "2026-03-05T06:52:54.174Z",
+      "order": 4,
+      "unpaidLeave": [],
+      "position": "старший архитектор-дизайнер"
+    },
+    {
+      "fullName": "Полетаева Анна Юрьевна",
+      "vacations": [
+        {
+          "id": "mRy88paYdP-_7KbiyTvYr",
+          "start": "2026-08-24",
+          "end": "2026-08-30"
+        },
+        {
+          "id": "rxo7G4_s8ROL9BzUbariO",
+          "start": "2026-10-26",
+          "end": "2026-11-01"
+        }
+      ],
+      "nrd": [],
+      "color": "#84cc16",
+      "id": "DviDBdU9hD13D656AzpU7",
+      "createdAt": "2026-03-05T07:01:42.502Z",
+      "order": 5,
+      "unpaidLeave": [
+        {
+          "id": "6wCkSASpoJg9e2IXhDIUw",
+          "start": "2026-08-31",
+          "end": "2026-09-06"
+        }
+      ],
+      "position": "старший архитектор-дизайнер",
+      "vacationDaysOverride": 28
+    },
+    {
+      "fullName": "Павлюк Маргарита Витальевна",
+      "vacations": [
+        {
+          "id": "dEEtBlId_qQjn8KlUDFff",
+          "start": "2026-06-29",
+          "end": "2026-07-05"
+        },
+        {
+          "id": "W56ylmodW6tVh-KSy_IJZ",
+          "start": "2026-11-16",
+          "end": "2026-11-22"
+        }
+      ],
+      "nrd": [],
+      "color": "#84cc16",
+      "id": "tt7V6j6ro07_gpxAqe2H2",
+      "createdAt": "2026-03-05T07:03:11.352Z",
+      "order": 6,
+      "unpaidLeave": [],
+      "position": "архитектор-дизайнер 2 категории"
+    },
+    {
+      "fullName": "Лобова Вероника Валерьевна",
+      "vacations": [
+        {
+          "id": "7RD2Brnpf5Nps8Ws8Rn_0",
+          "start": "2026-06-15",
+          "end": "2026-06-21"
+        },
+        {
+          "id": "bPD-XcgwBmDIM5JGUe9Tw",
+          "start": "2026-09-21",
+          "end": "2026-09-27"
+        }
+      ],
+      "nrd": [],
+      "color": "#84cc16",
+      "id": "HZpx5llIo9YJMzzJj5LKd",
+      "createdAt": "2026-03-05T07:04:43.518Z",
+      "order": 7,
+      "unpaidLeave": [
+        {
+          "id": "HSZCzSrL0uLxluCqU784Y",
+          "start": "2026-06-22",
+          "end": "2026-06-24"
+        }
+      ],
+      "position": "ГАП"
+    },
+    {
+      "fullName": "Лыков Никита Олегович",
+      "vacations": [
+        {
+          "id": "lS_3F_vvIgFd8Vd-NR01B",
+          "start": "2026-08-03",
+          "end": "2026-08-09"
+        },
+        {
+          "id": "LF26NkipE442DQLO8rVgp",
+          "start": "2026-11-23",
+          "end": "2026-11-29"
+        }
+      ],
+      "nrd": [],
+      "color": "#84cc16",
+      "id": "MNt9MXuoZGQtoEGQ2nopU",
+      "createdAt": "2026-03-05T07:06:44.500Z",
+      "order": 8,
+      "unpaidLeave": [
+        {
+          "id": "p75q1IGS4qO3wd3hDufMz",
+          "start": "2026-08-10",
+          "end": "2026-08-16"
+        }
+      ],
+      "position": "ГАП"
+    },
+    {
+      "fullName": "Чехвалов Сергей Викторович",
+      "vacations": [
+        {
+          "id": "ivgkgeTR9GPxtWaL406Tn",
+          "start": "2026-07-13",
+          "end": "2026-07-19"
+        },
+        {
+          "id": "Xen02Us_08NOeNi9mKGxX",
+          "start": "2026-10-19",
+          "end": "2026-10-25"
+        }
+      ],
+      "nrd": [],
+      "color": "#84cc16",
+      "id": "7X_jQLj8fmMIS5SHFGygr",
+      "createdAt": "2026-03-05T07:11:01.966Z",
+      "order": 9,
+      "unpaidLeave": [
+        {
+          "id": "wC5VPtS26fs-JTN-cFhhW",
+          "start": "2026-03-23",
+          "end": "2026-03-27"
+        },
+        {
+          "id": "1CuGnEXFkOWKURqrp4WWT",
+          "start": "2026-05-04",
+          "end": "2026-05-08"
+        }
+      ],
+      "position": "ГАП"
+    },
+    {
+      "fullName": "Севрюгин Владимир Викторович",
+      "vacations": [],
+      "nrd": [],
+      "color": "#84cc16",
+      "id": "O8Gzpnwe5K3fQr24TGTYD",
+      "createdAt": "2026-03-05T07:11:28.615Z",
+      "order": 10,
+      "unpaidLeave": []
+    },
+    {
+      "fullName": "Козлов Иван Сергеевич",
+      "vacations": [
+        {
+          "id": "JEnTnPEpE6dmCpFwlLoOa",
+          "start": "2026-08-03",
+          "end": "2026-08-09"
+        }
+      ],
+      "nrd": [],
+      "color": "#84cc16",
+      "id": "uOvQPJaDUEZs2J21Bc9UV",
+      "createdAt": "2026-03-05T07:17:19.227Z",
+      "order": 11,
+      "unpaidLeave": [
+        {
+          "id": "0VxhyegwkkxTCwG3yxoVf",
+          "start": "2026-08-10",
+          "end": "2026-08-23"
+        }
+      ],
+      "position": "ведущий архитектор-дизайнер"
+    },
+    {
+      "fullName": "Рыбакова Алина Максимовна",
+      "position": "архитектор-дизайнер 1 категории",
+      "vacations": [
+        {
+          "id": "flDDdaw07KFaT-NZM-YL9",
+          "start": "2026-08-17",
+          "end": "2026-08-23"
+        },
+        {
+          "id": "jDY7WxWqp1UZEfvHg4Xh4",
+          "start": "2026-11-16",
+          "end": "2026-11-22"
+        }
+      ],
+      "nrd": [],
+      "unpaidLeave": [],
+      "color": "#84cc16",
+      "id": "3zzW3FOOh2lLNfa50S0Ag",
+      "createdAt": "2026-03-06T10:29:14.484Z",
+      "order": 12
+    },
+    {
+      "fullName": "Кузнецов Владимир Васильевич",
+      "vacations": [
+        {
+          "id": "s3UCF0BphPaogOTEEKLK9",
+          "start": "2026-07-20",
+          "end": "2026-07-26"
+        },
+        {
+          "id": "QK_B-MPKoKrELBIyjxp5F",
+          "start": "2026-10-05",
+          "end": "2026-10-11"
+        }
+      ],
+      "nrd": [],
+      "unpaidLeave": [
+        {
+          "id": "aYmXuQR2_Exp7FiLSQj2S",
+          "start": "2026-03-30",
+          "end": "2026-04-03"
+        },
+        {
+          "id": "3PDW4hWAek0ZpfChKhWxa",
+          "start": "2026-07-27",
+          "end": "2026-07-31"
+        }
+      ],
+      "color": "#84cc16",
+      "id": "FBuKf-3jmRpXCwc0XW0FL",
+      "createdAt": "2026-03-06T10:31:14.421Z",
+      "order": 13
+    },
+    {
+      "fullName": "Бородин Павел Андреевич",
+      "position": "ГАП",
+      "vacations": [
+        {
+          "id": "GInjGZ_YA-2xbSGaszdGO",
+          "start": "2026-07-20",
+          "end": "2026-07-26"
+        },
+        {
+          "id": "Fm4PacZ9-Ln4Ar9MuaZ-R",
+          "start": "2026-10-19",
+          "end": "2026-10-25"
+        }
+      ],
+      "nrd": [],
+      "unpaidLeave": [
+        {
+          "id": "wtw3HiGGAAy_N0ZcU-LxN",
+          "start": "2026-05-04",
+          "end": "2026-05-06"
+        },
+        {
+          "id": "4zzNK92arYP2Jq6PTN11_",
+          "start": "2026-07-27",
+          "end": "2026-07-31"
+        }
+      ],
+      "color": "#84cc16",
+      "id": "RjjecQ1POuyxnqvvA_TDa",
+      "createdAt": "2026-03-06T10:32:34.198Z",
+      "order": 14
+    },
+    {
+      "fullName": "Анисимов Андрей Владимирович",
+      "position": "ГАП",
+      "vacations": [
+        {
+          "id": "yR_P4StUovOFbvb5-W_o8",
+          "start": "2026-09-21",
+          "end": "2026-09-27"
+        },
+        {
+          "id": "ES2h6zAyZL9HhitRXv_kI",
+          "start": "2026-06-08",
+          "end": "2026-06-14"
+        }
+      ],
+      "nrd": [],
+      "unpaidLeave": [],
+      "color": "#84cc16",
+      "id": "y_ULyzLJVK5_BJZF7Fd1m",
+      "createdAt": "2026-03-06T10:33:54.684Z",
+      "order": 15
+    },
+    {
+      "fullName": "Костецкий Антон Вячеславович",
+      "position": "ГАП",
+      "vacations": [
+        {
+          "id": "AIta5IL1-FMpCRohuHvHU",
+          "start": "2026-07-06",
+          "end": "2026-07-12"
+        },
+        {
+          "id": "Gu6xNtZ5IdHanaWsT3gfL",
+          "start": "2026-10-26",
+          "end": "2026-11-01"
+        }
+      ],
+      "nrd": [],
+      "unpaidLeave": [],
+      "color": "#84cc16",
+      "id": "FuvivdfKPqaBB-QxNGFCU",
+      "createdAt": "2026-03-06T10:34:55.350Z",
+      "order": 16
+    },
+    {
+      "fullName": "Рыкунова Влада Андреевна",
+      "vacations": [
+        {
+          "id": "RlUvbmDaOrSRneJ7dbJ6H",
+          "start": "2026-11-09",
+          "end": "2026-11-22"
+        }
+      ],
+      "nrd": [],
+      "unpaidLeave": [],
+      "color": "#84cc16",
+      "id": "4PurRvhWMkMqKQ7dYQXxc",
+      "createdAt": "2026-03-06T10:35:27.105Z",
+      "order": 17
+    },
+    {
+      "fullName": "Чуппуева Лана Александровна",
+      "vacations": [
+        {
+          "id": "22sMyZQr0G4HMnAuxQwhB",
+          "start": "2026-10-12",
+          "end": "2026-10-18"
+        },
+        {
+          "id": "tQkDQCe5ML87Xo_MaZPjj",
+          "start": "2026-06-22",
+          "end": "2026-06-28"
+        }
+      ],
+      "nrd": [],
+      "unpaidLeave": [],
+      "color": "#84cc16",
+      "id": "E3sjM0cVLKcUsTeUv5MXK",
+      "createdAt": "2026-03-06T10:36:07.292Z",
+      "order": 18
+    },
+    {
+      "fullName": "Шапошникова Ольга Николаевна",
+      "vacations": [
+        {
+          "id": "lCRxNU4blRbgL_WpvX12v",
+          "start": "2026-09-07",
+          "end": "2026-09-20"
+        }
+      ],
+      "nrd": [],
+      "unpaidLeave": [],
+      "color": "#84cc16",
+      "id": "LdDx5hj5pFbEIuNTSos4u",
+      "createdAt": "2026-03-06T10:37:49.715Z",
+      "order": 19
+    },
+    {
+      "fullName": "Каплунова Марина Игоревна",
+      "position": "дизайнер-визуализатор 1 категории",
+      "vacations": [
+        {
+          "id": "w13aHUFIt6GlsuYMrKKDp",
+          "start": "2026-11-16",
+          "end": "2026-11-29"
+        }
+      ],
+      "nrd": [],
+      "unpaidLeave": [
+        {
+          "id": "26jSCnn9saPKeqLKvwgEz",
+          "start": "2026-04-06",
+          "end": "2026-04-10"
+        }
+      ],
+      "color": "#84cc16",
+      "id": "slP2CggIL_x7Ai6joBYhM",
+      "createdAt": "2026-03-06T10:40:22.670Z",
+      "order": 20
+    },
+    {
+      "fullName": "Моршнев Владислав Дмитриевич",
+      "position": "дизайнер-визуализатор 1 категории",
+      "vacations": [
+        {
+          "id": "WbGaid1tB-BO2tm40Alyu",
+          "start": "2026-06-15",
+          "end": "2026-06-21"
+        },
+        {
+          "id": "KvAEQm_5MRDtN7yQsPjSW",
+          "start": "2026-10-05",
+          "end": "2026-10-11"
+        }
+      ],
+      "nrd": [],
+      "unpaidLeave": [],
+      "color": "#84cc16",
+      "id": "n4jfp5fQ8rDWTXpq4brUT",
+      "createdAt": "2026-03-06T10:43:11.011Z",
+      "order": 21
+    },
+    {
+      "fullName": "Лопатина Ольга Евгеньевна",
+      "position": "архитектор-дизайнер 1 категории",
+      "vacations": [
+        {
+          "id": "q0_CULRd4Bu6JYgT_8Dut",
+          "start": "2026-07-20",
+          "end": "2026-07-26"
+        },
+        {
+          "id": "6jp8AMqL2y3vEXhjMPe2t",
+          "start": "2026-09-21",
+          "end": "2026-09-27"
+        }
+      ],
+      "nrd": [],
+      "unpaidLeave": [],
+      "color": "#84cc16",
+      "id": "aAM5G1tlTKpZPKtrsGr2h",
+      "createdAt": "2026-03-06T10:44:12.159Z",
+      "order": 22
+    },
+    {
+      "fullName": "Капицына Юлия Валерьевна",
+      "position": "дизайнер-визуализатор 1 категории",
+      "vacations": [
+        {
+          "id": "cFvICSHrkAx0hHaVcLAY1",
+          "start": "2026-06-22",
+          "end": "2026-06-28"
+        },
+        {
+          "id": "bepnDJ-7UBbEL6gOmHR72",
+          "start": "2026-10-12",
+          "end": "2026-10-18"
+        }
+      ],
+      "nrd": [],
+      "unpaidLeave": [],
+      "color": "#84cc16",
+      "id": "jtfnXS9hdPR1WabQd4w6I",
+      "createdAt": "2026-03-06T10:45:43.204Z",
+      "order": 23
+    },
+    {
+      "fullName": "Декунов Иван Александрович",
+      "position": "дизайнер-визуализатор 1 категории",
+      "vacations": [
+        {
+          "id": "KxJcBKzVaxai3gn0AXGH-",
+          "start": "2026-07-06",
+          "end": "2026-07-12"
+        },
+        {
+          "id": "tlJEytlavcB_A6L4E9Oa-",
+          "start": "2026-11-02",
+          "end": "2026-11-08"
+        }
+      ],
+      "nrd": [],
+      "unpaidLeave": [],
+      "color": "#84cc16",
+      "id": "1kYjkAdHaZkaMEMGUY5vd",
+      "createdAt": "2026-03-06T10:46:56.081Z",
+      "order": 24
+    },
+    {
+      "fullName": "Гребенщикова Татьяна Борисовна",
+      "position": "дизайнер-визуализатор 2 категории",
+      "vacations": [
+        {
+          "id": "qRXMnxlAcKksKGwfV-KNd",
+          "start": "2026-07-13",
+          "end": "2026-07-19"
+        },
+        {
+          "id": "Ex75IelQNxK0ok5pUEDec",
+          "start": "2026-11-09",
+          "end": "2026-11-15"
+        }
+      ],
+      "nrd": [],
+      "unpaidLeave": [],
+      "color": "#84cc16",
+      "id": "V9mfty11rRgsbQCnMo-0P",
+      "createdAt": "2026-03-06T10:52:29.769Z",
+      "order": 25
+    },
+    {
+      "fullName": "Янбарисов Камиль Зинурович",
+      "position": "начальник мастерской",
+      "vacations": [
+        {
+          "id": "NI726MtVR3V6eaDKR3MKr",
+          "start": "2026-05-12",
+          "end": "2026-05-15"
+        },
+        {
+          "id": "k9VzLMxnfuWL9p5LEJPQR",
+          "start": "2026-06-22",
+          "end": "2026-06-30"
+        },
+        {
+          "id": "kw-A0AyFbGEFDIqcznIV1",
+          "start": "2026-11-05",
+          "end": "2026-11-19"
+        }
+      ],
+      "nrd": [
+        {
+          "id": "LTiWACylWHoXu-1WquPiH",
+          "start": "2026-07-01",
+          "end": "2026-07-03"
+        }
+      ],
+      "unpaidLeave": [],
+      "color": "#3b82f6",
+      "id": "4u2KLbP_PrEFYlZiu8_zP",
+      "createdAt": "2026-03-06T10:54:46.800Z",
+      "order": 26
+    },
+    {
+      "fullName": "Андриясов Михаил Олегович",
+      "vacations": [
+        {
+          "id": "qq_lxXdag03qQovYEshEN",
+          "start": "2026-03-10",
+          "end": "2026-03-13"
+        },
+        {
+          "id": "14tHbKNwjuwBgfXBspSV6",
+          "start": "2026-07-01",
+          "end": "2026-07-12"
+        },
+        {
+          "id": "l7Q6udUbn5USScCQwmREG",
+          "start": "2026-10-12",
+          "end": "2026-10-23"
+        }
+      ],
+      "nrd": [
+        {
+          "id": "VooKhQWwz6CcP8NTRIg2g",
+          "start": "2026-07-13",
+          "end": "2026-07-15"
+        }
+      ],
+      "unpaidLeave": [],
+      "color": "#3b82f6",
+      "id": "Hxv8t8KzaC41qannMHC0L",
+      "createdAt": "2026-03-06T11:28:12.915Z",
+      "order": 27
+    },
+    {
+      "fullName": "Волохов Олег Александрович",
+      "vacations": [
+        {
+          "id": "h-xYSBDx27XuXGeq23ruE",
+          "start": "2026-05-25",
+          "end": "2026-05-31"
+        },
+        {
+          "id": "7lcmxT-tO84LGx5akGGNT",
+          "start": "2026-07-20",
+          "end": "2026-08-02"
+        },
+        {
+          "id": "zxJsOSmWtQW9hOK1Fl5PV",
+          "start": "2026-10-26",
+          "end": "2026-11-01"
+        }
+      ],
+      "nrd": [
+        {
+          "id": "6qLLQVcmniLCWpgwIQxib",
+          "start": "2026-11-02",
+          "end": "2026-11-04"
+        }
+      ],
+      "unpaidLeave": [],
+      "color": "#3b82f6",
+      "id": "kkcpV8wrROygOUDjNbhxZ",
+      "createdAt": "2026-03-06T11:29:53.341Z",
+      "order": 28
+    },
+    {
+      "fullName": "Галютина Анастасия Андреевна",
+      "vacations": [
+        {
+          "id": "eJGGSXcEftHh77IAWE0WP",
+          "start": "2026-04-27",
+          "end": "2026-05-07"
+        },
+        {
+          "id": "8AiTdgF0mbV5n91-asaKJ",
+          "start": "2026-09-28",
+          "end": "2026-10-11"
+        },
+        {
+          "id": "ujeUUXHyvn_oY5GUoTmqV",
+          "start": "2026-11-02",
+          "end": "2026-11-04"
+        }
+      ],
+      "nrd": [],
+      "unpaidLeave": [],
+      "color": "#3b82f6",
+      "id": "_mcPMgjR-YPenY6igqpaV",
+      "createdAt": "2026-03-06T11:31:47.648Z",
+      "order": 29
+    },
+    {
+      "fullName": "Ефимов Владимир Викторович",
+      "vacations": [
+        {
+          "id": "N57WzRPfXgfvN7zGjLlJ2",
+          "start": "2026-05-18",
+          "end": "2026-05-31"
+        },
+        {
+          "id": "bhef5y0IkE-vLccknUHn_",
+          "start": "2026-08-10",
+          "end": "2026-08-23"
+        }
+      ],
+      "nrd": [],
+      "unpaidLeave": [],
+      "color": "#3b82f6",
+      "id": "vxL4c50ghuvYUTo32fwV5",
+      "createdAt": "2026-03-06T11:41:05.426Z",
+      "order": 30
+    },
+    {
+      "fullName": "Исраилов Амир Айдарович",
+      "vacations": [
+        {
+          "id": "oPUUyjnbObTR4RY-hvwQE",
+          "start": "2026-04-06",
+          "end": "2026-04-19"
+        },
+        {
+          "id": "V5dgVszc3CtYURZhWWU6n",
+          "start": "2026-09-14",
+          "end": "2026-09-22"
+        },
+        {
+          "id": "nHBtTQCBBr8UcN_RLAISP",
+          "start": "2026-11-23",
+          "end": "2026-11-27"
+        }
+      ],
+      "nrd": [],
+      "unpaidLeave": [],
+      "color": "#3b82f6",
+      "id": "rh40EjGHr-Acl3tRw8OvQ",
+      "createdAt": "2026-03-06T11:42:18.671Z",
+      "order": 31
+    },
+    {
+      "fullName": "Максутов Булат Олегович",
+      "vacations": [
+        {
+          "id": "iSo7vrl4629ckFhxd_2-u",
+          "start": "2026-07-27",
+          "end": "2026-08-04"
+        },
+        {
+          "id": "ya77OlnCzvqsOvXmzircr",
+          "start": "2026-06-15",
+          "end": "2026-06-28"
+        },
+        {
+          "id": "PXcPycJN5YfaEBeYIZm-y",
+          "start": "2026-03-02",
+          "end": "2026-03-06"
+        }
+      ],
+      "nrd": [
+        {
+          "id": "G5oHMGsmMNwNFDMifUjq5",
+          "start": "2026-08-05",
+          "end": "2026-08-07"
+        }
+      ],
+      "unpaidLeave": [],
+      "color": "#3b82f6",
+      "id": "yAsLVIFQaBDILu40sw2K8",
+      "createdAt": "2026-03-06T11:44:41.466Z",
+      "order": 32
+    },
+    {
+      "fullName": "Мога Александра Сергеевна",
+      "vacations": [
+        {
+          "id": "1GEwjs6zbyXMuYtAYOXuN",
+          "start": "2026-08-10",
+          "end": "2026-08-23"
+        },
+        {
+          "id": "e3ogITNzJ-xTc9PW1S2bG",
+          "start": "2026-10-05",
+          "end": "2026-10-11"
+        },
+        {
+          "id": "DxEKm1NXOwMTEWWi4GiKa",
+          "start": "2026-12-14",
+          "end": "2026-12-20"
+        }
+      ],
+      "nrd": [],
+      "unpaidLeave": [],
+      "color": "#3b82f6",
+      "id": "xAtrnFhNH0jPVyqS5Jvbp",
+      "createdAt": "2026-03-06T11:46:27.938Z",
+      "order": 33
+    },
+    {
+      "fullName": "Пан Григорий Владимирович",
+      "vacations": [
+        {
+          "id": "0YnQY5x0du6hIyyfp7Jna",
+          "start": "2026-04-20",
+          "end": "2026-04-24"
+        },
+        {
+          "id": "u2CZQ8I7fcGt-CjlCUFo3",
+          "start": "2026-08-03",
+          "end": "2026-08-11"
+        },
+        {
+          "id": "Mt8Hjwr_nhA5yzsnZA2K0",
+          "start": "2026-09-21",
+          "end": "2026-10-04"
+        }
+      ],
+      "nrd": [],
+      "unpaidLeave": [],
+      "color": "#3b82f6",
+      "id": "6JVhxssOjuZ4tgdIJbLm2",
+      "createdAt": "2026-03-06T11:47:26.714Z",
+      "order": 34
+    },
+    {
+      "fullName": "Суббота Андрей Валерьевич",
+      "vacations": [
+        {
+          "id": "4ACOYDpZPUenCmd_Xw3VY",
+          "start": "2026-09-07",
+          "end": "2026-09-20"
+        },
+        {
+          "id": "eeQbXco-qzkXO1cUVtVhk",
+          "start": "2026-11-05",
+          "end": "2026-11-13"
+        },
+        {
+          "id": "moTaPG9Faz1am7gULHnmL",
+          "start": "2026-12-07",
+          "end": "2026-12-11"
+        }
+      ],
+      "nrd": [
+        {
+          "id": "nuW2mzjaKbLcGI3oYgkUG",
+          "start": "2026-11-14",
+          "end": "2026-11-16"
+        }
+      ],
+      "unpaidLeave": [],
+      "color": "#3b82f6",
+      "id": "Gjuj5XZsOa1ZtFdSWpLJr",
+      "createdAt": "2026-03-06T11:49:04.063Z",
+      "order": 35
+    },
+    {
+      "fullName": "Трофимов Алексей Юрьевич",
+      "vacations": [
+        {
+          "id": "sqp7pe5Ti7W-qg4X-WQKJ",
+          "start": "2026-03-10",
+          "end": "2026-03-23"
+        },
+        {
+          "id": "oVl_JrY8LwfljAOb-DXLt",
+          "start": "2026-06-01",
+          "end": "2026-06-07"
+        },
+        {
+          "id": "MbsnPLH6TMMvwOuzYl4Ak",
+          "start": "2026-12-01",
+          "end": "2026-12-07"
+        }
+      ],
+      "nrd": [],
+      "unpaidLeave": [],
+      "color": "#3b82f6",
+      "id": "GjcvsqG55cZ9bXqkslhLA",
+      "createdAt": "2026-03-06T11:50:20.742Z",
+      "order": 36
+    },
+    {
+      "fullName": "Шарапов Алексей Александрович",
+      "vacations": [
+        {
+          "id": "vJb0Bk45DsuWpQJlyW9Xg",
+          "start": "2026-07-20",
+          "end": "2026-08-02"
+        },
+        {
+          "id": "oTjw9vjI1NgXSEJNSJ-Ox",
+          "start": "2026-01-27",
+          "end": "2026-01-30"
+        },
+        {
+          "id": "NDcsFQg7TFEYKa8RMPt4B",
+          "start": "2026-05-18",
+          "end": "2026-05-27"
+        }
+      ],
+      "nrd": [
+        {
+          "id": "2TGQu_W3ALkwPVwQqhCCT",
+          "start": "2026-05-28",
+          "end": "2026-05-29"
+        },
+        {
+          "id": "-58PZbJryhB590pFdRgLj",
+          "start": "2026-08-03",
+          "end": "2026-08-03"
+        }
+      ],
+      "unpaidLeave": [],
+      "color": "#3b82f6",
+      "id": "fvVs19qzxxe7X4hYxZkyo",
+      "createdAt": "2026-03-06T11:52:11.384Z",
+      "order": 37
+    },
+    {
+      "fullName": "Шрамов Кирилл Сергеевич",
+      "vacations": [
+        {
+          "id": "bvVq53351o4350zu0iNb6",
+          "start": "2026-02-24",
+          "end": "2026-03-06"
+        },
+        {
+          "id": "dUt_xPFQk1naAOLSbrE8s",
+          "start": "2026-08-24",
+          "end": "2026-09-06"
+        },
+        {
+          "id": "5vlIqF4OdcFjE65QVj4K_",
+          "start": "2026-12-07",
+          "end": "2026-12-09"
+        }
+      ],
+      "nrd": [
+        {
+          "id": "bOCgFy-TdO6z_51_AYWJk",
+          "start": "2026-12-10",
+          "end": "2026-12-12"
+        }
+      ],
+      "unpaidLeave": [],
+      "color": "#3b82f6",
+      "id": "g0kX4fPoawaUYHLYTPzwq",
+      "createdAt": "2026-03-06T11:53:38.693Z",
+      "order": 38
+    },
+    {
+      "fullName": "Южакова Вера Алексеевна",
+      "vacations": [
+        {
+          "id": "Dk9UScR2pBZA3gPQTMJWZ",
+          "start": "2026-05-12",
+          "end": "2026-05-25"
+        },
+        {
+          "id": "-itl2WFbmzXHnaS7Eglp0",
+          "start": "2026-08-24",
+          "end": "2026-08-30"
+        },
+        {
+          "id": "9uSbZDqV6WRbn1qtsDVpO",
+          "start": "2026-11-30",
+          "end": "2026-12-06"
+        }
+      ],
+      "nrd": [],
+      "unpaidLeave": [],
+      "color": "#3b82f6",
+      "id": "WLxT6hIYwbuMofzVYiYeW",
+      "createdAt": "2026-03-06T11:54:45.076Z",
+      "order": 39
+    },
+    {
+      "fullName": "Гуторов Вадим Валерьевич",
+      "vacations": [
+        {
+          "id": "lQh3bKFGod8pf-nF9qsnE",
+          "start": "2026-03-10",
+          "end": "2026-03-23"
+        },
+        {
+          "id": "g2OyHipdZoTUz5weq7sUU",
+          "start": "2026-06-29",
+          "end": "2026-07-03"
+        },
+        {
+          "id": "PfBXYP80oz4tW4I8AwYY1",
+          "start": "2026-09-02",
+          "end": "2026-09-10"
+        }
+      ],
+      "nrd": [],
+      "unpaidLeave": [],
+      "color": "#3b82f6",
+      "id": "MOfcH6D9DgcHUZhnkKRM7",
+      "createdAt": "2026-03-06T11:55:45.063Z",
+      "order": 40
+    },
+    {
+      "fullName": "Кравченко Олег Владимирович",
+      "position": "ГИП",
+      "vacations": [
+        {
+          "id": "hwtwwOiq5IrnU07J29ujv",
+          "start": "2026-09-07",
+          "end": "2026-09-20"
+        }
+      ],
+      "nrd": [],
+      "unpaidLeave": [],
+      "color": "#06b6d4",
+      "id": "VsLTTqcBrbY-fsItFEV7F",
+      "createdAt": "2026-03-06T11:56:31.766Z",
+      "order": 41
+    },
+    {
+      "fullName": "Иванов Николай Николаевич",
+      "vacations": [
+        {
+          "id": "0ZuAIAtHC5rN09Zl-qHhE",
+          "start": "2026-07-13",
+          "end": "2026-07-19"
+        }
+      ],
+      "nrd": [],
+      "unpaidLeave": [],
+      "color": "#06b6d4",
+      "id": "OWi--ObSzTJctp_asv7AY",
+      "createdAt": "2026-03-06T11:57:12.241Z",
+      "order": 42
+    },
+    {
+      "fullName": "Гусев Савва Александрович",
+      "vacations": [
+        {
+          "id": "K2yvIhOkdcXnzTwPK53ES",
+          "start": "2026-06-29",
+          "end": "2026-07-05"
+        },
+        {
+          "id": "3u_3ouyXa7-iWsS4Ta76H",
+          "start": "2026-11-09",
+          "end": "2026-11-15"
+        }
+      ],
+      "nrd": [],
+      "unpaidLeave": [
+        {
+          "id": "EyKGEs3j1hNlLgtXglQc7",
+          "start": "2026-07-06",
+          "end": "2026-07-10"
+        }
+      ],
+      "color": "#06b6d4",
+      "id": "6EDfHapa64DgmhMzZQTbW",
+      "createdAt": "2026-03-06T11:57:47.158Z",
+      "order": 43
+    },
+    {
+      "fullName": "Семенов Алексей Юрьевич",
+      "vacations": [],
+      "nrd": [],
+      "unpaidLeave": [],
+      "color": "#06b6d4",
+      "id": "G-3yIqUi-dXvOIsru9E5S",
+      "createdAt": "2026-03-06T11:58:15.631Z",
+      "order": 44
+    }
+  ],
+  "specialDates": [
+    {
+      "type": "holiday",
+      "name": "Выходной день (перенос с 09.05)",
+      "start": "2026-05-11",
+      "end": "2026-05-11",
+      "isStatutory": false,
+      "id": "-ZNpJZscAkZ45Z7Dpqft4"
+    },
+    {
+      "type": "holiday",
+      "name": "Выходной день (перенос с 03.01)",
+      "start": "2026-01-09",
+      "end": "2026-01-09",
+      "isStatutory": false,
+      "id": "2U8zAlIMAKkz1_skbIweI"
+    },
+    {
+      "type": "holiday",
+      "name": "День Победы",
+      "start": "2026-05-09",
+      "end": "2026-05-09",
+      "isStatutory": true,
+      "id": "5amBrjFbiyXpQ57ghOa5S"
+    },
+    {
+      "type": "holiday",
+      "name": "Выходной день (перенос с 04.01)",
+      "start": "2026-12-31",
+      "end": "2026-12-31",
+      "isStatutory": false,
+      "id": "GXAa2ot7FaSHMUX0IBIER"
+    },
+    {
+      "type": "holiday",
+      "name": "Международный женский день",
+      "start": "2026-03-08",
+      "end": "2026-03-08",
+      "isStatutory": true,
+      "id": "MdetHJmLxACjNEYDi0KWD"
+    },
+    {
+      "type": "holiday",
+      "name": "Праздник весны и труда",
+      "start": "2026-05-01",
+      "end": "2026-05-01",
+      "isStatutory": true,
+      "id": "TQN8PjQzQ6a8MW1yN5iY3"
+    },
+    {
+      "type": "holiday",
+      "name": "Выходной день (перенос с 08.03)",
+      "start": "2026-03-09",
+      "end": "2026-03-09",
+      "isStatutory": false,
+      "id": "YYWXzdavxzW100jO8OFwP"
+    },
+    {
+      "type": "holiday",
+      "name": "День народного единства",
+      "start": "2026-11-04",
+      "end": "2026-11-04",
+      "isStatutory": true,
+      "id": "Zu0KDOmvlS_CZ9ZC3MxNJ"
+    },
+    {
+      "type": "holiday",
+      "name": "День России",
+      "start": "2026-06-12",
+      "end": "2026-06-12",
+      "isStatutory": true,
+      "id": "aVWMOFpm8yCsxSj-58gef"
+    },
+    {
+      "type": "holiday",
+      "name": "День защитника Отечества",
+      "start": "2026-02-23",
+      "end": "2026-02-23",
+      "isStatutory": true,
+      "id": "f8hyBZjbFKZwScNtyUMva"
+    },
+    {
+      "type": "holiday",
+      "name": "Новогодние каникулы / Рождество",
+      "start": "2026-01-01",
+      "end": "2026-01-08",
+      "isStatutory": true,
+      "id": "hJ5qrnhCtFbDXM4kaJZpp"
+    }
+  ],
+  "settings": {
+    "planningYear": 2026,
+    "scale": "month",
+    "theme": "light",
+    "rowHeight": 44,
+    "showWeekends": true,
+    "showNRD": true,
+    "showUnpaidLeave": true,
+    "maxConcurrentVacations": null,
+    "vacationDaysNorm": 28,
+    "nrdColor": "#fbbf24",
+    "unpaidColor": "#d1d5db"
+  },
+  "exportedAt": "2026-03-06T13:51:28.328Z",
+  "version": 1
+}
