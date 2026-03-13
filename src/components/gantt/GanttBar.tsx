@@ -56,18 +56,19 @@ export function GanttBar({ bar, rowHeight, allBars }: Props) {
   )
   const insideLabel = displayWidth > 20 ? `${days}д` : ''
 
-  const GAP = 6
+  const LABEL_W = 75  // примерная ширина "дд.ММ-дд.ММ" в text-xs, px
+  const MARGIN = 4    // отступ между краем полосы и текстом подписи
   const rightEdge = displayX + displayWidth
-  const hasRightNeighbor = allBars.some(
-    (b) => b.vacationId !== bar.vacationId && b.x >= rightEdge - 1 && b.x <= rightEdge + GAP,
+  const hasRightBlocking = allBars.some(
+    (b) => b.vacationId !== bar.vacationId && b.x >= rightEdge - 1 && b.x < rightEdge + LABEL_W + MARGIN,
   )
-  const hasLeftNeighbor = allBars.some(
-    (b) => b.vacationId !== bar.vacationId && (b.x + b.width) <= displayX + 1 && (b.x + b.width) >= displayX - GAP,
+  const hasLeftBlocking = allBars.some(
+    (b) => b.vacationId !== bar.vacationId && (b.x + b.width) <= displayX + 1 && (b.x + b.width) > displayX - LABEL_W - MARGIN,
   )
   const dateLabel = displayWidth >= 8
     ? `${format(displayStart, 'dd.MM')}-${format(displayEnd, 'dd.MM')}`
     : ''
-  const outsideSide = !hasRightNeighbor ? 'right' : !hasLeftNeighbor ? 'left' : null
+  const outsideSide = !hasRightBlocking ? 'right' : !hasLeftBlocking ? 'left' : null
 
   return (
     <>
