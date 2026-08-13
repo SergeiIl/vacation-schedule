@@ -14,10 +14,6 @@
       "**/.DS_Store": true,
     },
 
-    // Основные настройки
-    "cSpell.language": "en,ru",
-    "svg.preview.background": "editor",
-
     // Настройки для монорепозитория
     "eslint.workingDirectories": [
       { "directory": "apps/*", "changeProcessCWD": true },
@@ -31,11 +27,8 @@
     // Настройки редактирования
     "editor.formatOnPaste": true,
     "editor.formatOnSave": true,
-    "editor.tabCompletion": "on",
-    "editor.tabSize": 2,
     "eslint.format.enable": true,
     "eslint.nodeEnv": ".env",
-    "files.autoSave": "onFocusChange",
     "prettier.endOfLine": "auto",
     "prettier.semi": false,
     "prettier.singleQuote": true,
@@ -43,14 +36,6 @@
     "prettier.trailingComma": "all",
     "prettier.bracketSpacing": true,
     "prettier.arrowParens": "always",
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "[typescriptreact]": {
-      "editor.defaultFormatter": "esbenp.prettier-vscode",
-    },
-    "[json]": {
-      "editor.defaultFormatter": "esbenp.prettier-vscode",
-    },
-    "editor.fontFamily": "JetBrains Mono",
   },
 
   // Расширения
